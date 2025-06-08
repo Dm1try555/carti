@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% load static %}
+{% load store_tags %}
+
+
+{% block title %}Корзина - LeatherCraft{% endblock %}
+
+{% block content %}
+    <section class="cart-page">
+        <div class="container">
+            <h1>Корзина покупок</h1>
+            
+            {% if cart_items %}
+                <div class="cart-content">
+                    <div class="cart-items-list">
+                        {% for item in cart_items %}
+                            <div class="cart-item" data-product-id="{{ item.product.id }}">
+                                <div class="item-image">
+                                    <img src="{{ item.product.image.url|default:'/static/images/product-placeholder.jpg' }}" 
+                                         alt="{{ item.product.name }}">
+                                </div>
+                                
+                                <div class="item-details">
+                                    <h3>
+                                        <a href="{% url 'store:product_detail' item.product.id %}">{{ item.product.name }}</a>
+                                    </h3>
+                                    <p class="item-description">{{ item.product.description[:100] }}...</p>
+                                    
+                                    {% if item.selected_options %}
+                                        <div class="item-options">
+                                            {% for option_name, option_value in item.selected_options.items() %}
+                                                <span class="option">{{ option_name }}: {{ option_value }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="item-quantity">
+                                    <label>Количество:</label>
+                                    <div class="quantity-controls">
+                                        <button class="quantity-btn" onclick="updateCartQuantity({{ item.product.id }}, {{ item.quantity - 1 }})">-</button>
+                                        <input type="number" value="{{ item.quantity }}" min="1" max="{{ item.product.stock }}" 
+                                               onchange="updateCartQuantity({{ item.product.id }}, this.value)">
+                                        <button class="quantity-btn" onclick="updateCartQuantity({{ item.product.id }}, {{ item.quantity + 1 }})">+</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="item-price">
+                                    <span class="unit-price">{{ item.product.price|currency }} за шт.</span>
+                                    <span class="total-price">{{ item.product.price|multiply:item.quantity|currency }}</span>
+                                </div>
+                                
+                                <div class="item-actions">
+                                    <button class="remove-item" onclick="removeFromCart({{ item.product.id }})">
+                                        <i class="fas fa-trash"></i>
+                                        Удалить
+                                    </button>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="cart-summary">
+                        <div class="summary-card">
+                            <h3>Итого по заказу</h3>
+                            
+                            <div class="summary-line">
+                                <span>Товары ({{ cart_items|length }} шт.):</span>
+                                <span>{{ subtotal|currency }}</span>
+                            </div>
+                            
+                            {% if delivery_cost %}
+                                <div class="summary-line">
+                                    <span>Доставка:</span>
+                                    <span>{{ delivery_cost|currency }}</span>
+                                </div>
+                            {% endif %}
+                            
+                            {% if discount %}
+                                <div class="summary-line discount">
+                                    <span>Скидка:</span>
+                                    <span>-{{ discount|currency }}</span>
+                                </div>
+                            {% endif %}
+                            
+                            <div class="summary-line total">
+                                <span>К оплате:</span>
+                                <span>{{ total|currency }}</span>
+                            </div>
+                            
+                            <div class="cart-actions">
+                                <a href="{% url 'store:checkout' %}" class="checkout-btn">
+                                    Оформить заказ
+                                </a>
+                                <a href="{% url 'store:catalog' %}" class="continue-shopping">
+                                    Продолжить покупки
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Promo Code -->
+                        <div class="promo-code">
+                            <h4>Промокод</h4>
+                            <form method="POST" action="{% url 'store:apply_promo' %}">
+                                <div class="promo-input">
+                                    <input type="text" name="promo_code" placeholder="Введите промокод" value="{{ current_promo_code }}">
+                                    <button type="submit">Применить</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="empty-cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    <h2>Ваша корзина пуста</h2>
+                    <p>Добавьте товары из нашего каталога</p>
+                    <a href="{% url 'store:catalog' %}" class="cta-btn">Перейти к покупкам</a>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function updateCartQuantity(productId, newQuantity) {
+    if (newQuantity < 1) {
+        removeFromCart(productId);
+        return;
+    }
+    
+    fetch('{% url 'store:update_cart' %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrf_token]').value
+        },
+        body: JSON.stringify({
+            product_id: productId,
+            quantity: newQuantity
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            showMessage(data.message || 'Ошибка при обновлении корзины', 'error');
+        }
+    })
+    .catch(error => {
+        showMessage('Произошла ошибка', 'error');
+    });
+}
+
+function removeFromCart(productId) {
+    if (confirm('Удалить товар из корзины?')) {
+        fetch('{% url 'store:remove_from_cart' %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrf_token]').value
+            },
+            body: JSON.stringify({
+                product_id: productId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                showMessage(data.message || 'Ошибка при удалении товара', 'error');
+            }
+        })
+        .catch(error => {
+            showMessage('Произошла ошибка', 'error');
+        });
+    }
+}
+</script>
+{% endblock %}

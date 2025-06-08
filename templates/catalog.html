@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block title %}Каталог - LeatherCraft{% endblock %}
+
+{% block content %}
+    <section class="catalog-page">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1>
+                    {% if current_category %}
+                        {{ current_category.name }}
+                    {% else %}
+                        Каталог товаров
+                    {% endif %}
+                </h1>
+                {% if current_category and current_category.description %}
+                    <p>{{ current_category.description }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Filters and Sorting -->
+            <div class="catalog-controls">
+                <div class="filters-section">
+                    <h3>Фильтры</h3>
+                    <form method="GET" action="{% url 'store:catalog' %}" id="filtersForm">
+                        <!-- Category Filter -->
+                        <div class="filter-group">
+                            <label>Категория</label>
+                            <select name="category" onchange="document.getElementById('filtersForm').submit()">
+                                <option value="">Все категории</option>
+                                {% for category in categories %}
+                                    <option value="{{ category.slug }}" {% if request.GET.category == category.slug %}selected{% endif %}>
+                                        {{ category.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Price Filter -->
+                        <div class="filter-group">
+                            <label>Цена</label>
+                            <div class="price-range">
+                                <input type="number" name="price_min" placeholder="От" value="{{ request.GET.price_min|default:'' }}">
+                                <input type="number" name="price_max" placeholder="До" value="{{ request.GET.price_max|default:'' }}">
+                            </div>
+                        </div>
+
+                        <!-- Color Filter -->
+                        {% if available_colors %}
+                            <div class="filter-group">
+                                <label>Цвет</label>
+                                <div class="color-filters">
+                                    {% for color in available_colors %}
+                                        <label class="color-option">
+                                            <input type="checkbox" name="color" value="{{ color }}" 
+                                                   {% if color in request.GET.color %}checked{% endif %}>
+                                            <span class="color-swatch" style="background-color: {{ color }}"></span>
+                                            {{ color }}
+                                        </label>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <button type="submit" class="apply-filters-btn">Применить фильтры</button>
+                        <a href="{% url 'store:catalog' %}" class="clear-filters-btn">Сбросить</a>
+                    </form>
+                </div>
+
+                <div class="catalog-main">
+                    <div class="catalog-header">
+                        <div class="results-info">
+                            <span>Найдено товаров: {{ products.paginator.count }}</span>
+                        </div>
+                        <div class="sorting-controls">
+                            <select name="sort" onchange="updateSort(this.value)">
+                                <option value="default" {% if request.GET.sort == 'default' %}selected{% endif %}>По умолчанию</option>
+                                <option value="price_asc" {% if request.GET.sort == 'price_asc' %}selected{% endif %}>Цена: по возрастанию</option>
+                                <option value="price_desc" {% if request.GET.sort == 'price_desc' %}selected{% endif %}>Цена: по убыванию</option>
+                                <option value="name" {% if request.GET.sort == 'name' %}selected{% endif %}>По названию</option>
+                                <option value="newest" {% if request.GET.sort == 'newest' %}selected{% endif %}>Сначала новые</option>
+                            </select>
+                            <div class="view-toggle">
+                                <button class="view-btn active" onclick="setView('grid')">
+                                    <i class="fas fa-th"></i>
+                                </button>
+                                <button class="view-btn" onclick="setView('list')">
+                                    <i class="fas fa-list"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Products Grid -->
+                    <div class="products-grid" id="productsGrid">
+                        {% load store_tags %}
+                        {% for product in products.object_list %}
+                            <div class="product-card" onclick="location.href='{% url 'store:product_detail' product.id %}'">
+                                <div class="product-image">
+                                    <img src="{% get_main_image product %}" alt="{{ product.name }}">
+                                    {% if product.is_featured %}
+                                        <div class="product-badge">Хит продаж</div>
+                                    {% endif %}
+                                    {% if product.is_new %}
+                                        <div class="product-badge new">Новинка</div>
+                                    {% endif %}
+                                    {% if product.discount_percentage %}
+                                        <div class="product-badge discount">-{{ product.discount_percentage }}%</div>
+                                    {% endif %}
+                                </div>
+                                <div class="product-info">
+                                    <h3>{{ product.name }}</h3>
+                                    <p>{{ product.description|truncatechars:100 }}...</p>
+                                    <div class="product-price">
+                                        {% if product.discount_price %}
+                                            <span class="price">{{ product.discount_price|currency }}</span>
+                                            <span class="old-price">{{ product.price|currency }}</span>
+                                        {% else %}
+                                            <span class="price">{{ product.price|currency }}</span>
+                                        {% endif %}
+                                        <button class="add-to-cart" onclick="event.stopPropagation(); addToCart({{ product.id }})">
+                                            <i class="fas fa-shopping-cart"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <div class="no-products">
+                                <i class="fas fa-search"></i>
+                                <h3>Товары не найдены</h3>
+                                <p>Попробуйте изменить параметры поиска или фильтры</p>
+                                <a href="{% url 'store:catalog' %}" class="cta-btn">Сбросить фильтры</a>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Pagination -->
+                    {% if products.paginator.num_pages > 1 %}
+                        <div class="pagination">
+                            {% if products.has_previous %}
+                                <a href="{% url 'store:catalog' %}?page={{ products.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-btn">
+                                    <i class="fas fa-chevron-left"></i>
+                                </a>
+                            {% endif %}
+
+                            {% for page_num in products.paginator.page_range %}
+                                {% if page_num != products.number %}
+                                    <a href="{% url 'store:catalog' %}?page={{ page_num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-btn">{{ page_num }}</a>
+                                {% else %}
+                                    <span class="page-btn active">{{ page_num }}</span>
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if products.has_next %}
+                                <a href="{% url 'store:catalog' %}?page={{ products.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-btn">
+                                    <i class="fas fa-chevron-right"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function updateSort(sortValue) {
+    const url = new URL(window.location);
+    url.searchParams.set('sort', sortValue);
+    window.location.href = url.toString();
+}
+
+function setView(viewType) {
+    const buttons = document.querySelectorAll('.view-btn');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    event.target.closest('.view-btn').classList.add('active');
+    
+    const grid = document.getElementById('productsGrid');
+    if (viewType === 'list') {
+        grid.classList.add('list-view');
+    } else {
+        grid.classList.remove('list-view');
+    }
+    
+    localStorage.setItem('catalogView', viewType);
+}
+
+// Restore view preference
+document.addEventListener('DOMContentLoaded', function() {
+    const savedView = localStorage.getItem('catalogView');
+    if (savedView === 'list') {
+        setView('list');
+    }
+});
+</script>
+{% endblock %}

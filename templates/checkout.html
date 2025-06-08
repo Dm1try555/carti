@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+{% load static %}
+{% load store_tags %}
+
+
+{% block title %}Оформление заказа - LeatherCraft{% endblock %}
+
+{% block content %}
+    <section class="checkout-page">
+        <div class="container">
+            <h1>Оформление заказа</h1>
+            
+            {% if not cart_items %}
+                <div class="empty-cart">
+                    <p>Ваша корзина пуста. <a href="{% url 'store:catalog' %}">Перейти к покупкам</a></p>
+                </div>
+            {% else %}
+                <form method="POST" action="{% url 'store:process_order' %}" class="checkout-form">
+                    {% csrf_token %}
+                    
+                    <div class="checkout-content">
+                        <div class="checkout-main">
+                            <!-- Customer Information -->
+                            <div class="form-section">
+                                <h2>Контактная информация</h2>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="first_name">Имя *</label>
+                                        <input type="text" id="first_name" name="first_name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="last_name">Фамилия *</label>
+                                        <input type="text" id="last_name" name="last_name" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="phone">Телефон *</label>
+                                        <input type="tel" id="phone" name="phone" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email">Email</label>
+                                        <input type="email" id="email" name="email">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Delivery Information -->
+                            <div class="form-section">
+                                <h2>Доставка</h2>
+                                <div class="delivery-options">
+                                    <label class="delivery-option">
+                                        <input type="radio" name="delivery_method" value="courier" checked>
+                                        <div class="option-content">
+                                            <h3>Курьерская доставка</h3>
+                                            <p>Доставка по указанному адресу</p>
+                                            <span class="price">300 ₽</span>
+                                        </div>
+                                    </label>
+                                    <label class="delivery-option">
+                                        <input type="radio" name="delivery_method" value="pickup">
+                                        <div class="option-content">
+                                            <h3>Самовывоз</h3>
+                                            <p>Забрать в нашем магазине</p>
+                                            <span class="price">Бесплатно</span>
+                                        </div>
+                                    </label>
+                                </div>
+                                
+                                <div class="delivery-address" id="deliveryAddress">
+                                    <div class="form-group">
+                                        <label for="city">Город *</label>
+                                        <input type="text" id="city" name="city" value="Москва" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="address">Адрес доставки *</label>
+                                        <textarea id="address" name="address" required placeholder="Улица, дом, квартира"></textarea>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="postal_code">Индекс</label>
+                                            <input type="text" id="postal_code" name="postal_code">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="delivery_time">Время доставки</label>
+                                            <select id="delivery_time" name="delivery_time">
+                                                <option value="">Любое время</option>
+                                                <option value="morning">Утром (9:00-12:00)</option>
+                                                <option value="afternoon">Днем (12:00-18:00)</option>
+                                                <option value="evening">Вечером (18:00-21:00)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Payment Method -->
+                            <div class="form-section">
+                                <h2>Способ оплаты</h2>
+                                <div class="payment-options">
+                                    <label class="payment-option">
+                                        <input type="radio" name="payment_method" value="cash" checked>
+                                        <div class="option-content">
+                                            <i class="fas fa-money-bill"></i>
+                                            <span>Наличными при получении</span>
+                                        </div>
+                                    </label>
+                                    <label class="payment-option">
+                                        <input type="radio" name="payment_method" value="card">
+                                        <div class="option-content">
+                                            <i class="fas fa-credit-card"></i>
+                                            <span>Картой при получении</span>
+                                        </div>
+                                    </label>
+                                    <label class="payment-option">
+                                        <input type="radio" name="payment_method" value="online">
+                                        <div class="option-content">
+                                            <i class="fas fa-globe"></i>
+                                            <span>Онлайн оплата</span>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Additional Information -->
+                            <div class="form-section">
+                                <h2>Дополнительная информация</h2>
+                                <div class="form-group">
+                                    <label for="notes">Комментарий к заказу</label>
+                                    <textarea id="notes" name="notes" placeholder="Особые пожелания или инструкции"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Order Summary -->
+                        <div class="checkout-sidebar">
+                            <div class="order-summary">
+                                <h3>Ваш заказ</h3>
+                                
+                                <div class="order-items">
+                                    {% for item in cart_items %}
+                                        <div class="order-item">
+                                            <img src="{{ item.product.image.url|default:'/static/images/product-placeholder.jpg' }}" 
+                                                 alt="{{ item.product.name }}">
+                                            <div class="item-info">
+                                                <h4>{{ item.product.name }}</h4>
+                                                <span class="quantity">{{ item.quantity }} шт.</span>
+                                                {% if item.selected_options %}
+                                                    <div class="item-options">
+                                                        {% for option_name, option_value in item.selected_options.items() %}
+                                                            <span>{{ option_name }}: {{ option_value }}</span>
+                                                        {% endfor %}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <span class="item-total">{{ item.product.price|multiply:item.quantity|currency }}</span>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                
+                                <div class="order-totals">
+                                    <div class="total-line">
+                                        <span>Товары:</span>
+                                        <span>{{ subtotal|currency }}</span>
+                                    </div>
+                                    <div class="total-line">
+                                        <span>Доставка:</span>
+                                        <span id="deliveryCost">300 ₽</span>
+                                    </div>
+                                    {% if discount %}
+                                        <div class="total-line discount">
+                                            <span>Скидка:</span>
+                                            <span>-{{ discount|currency }}</span>
+                                        </div>
+                                    {% endif %}
+                                    <div class="total-line final">
+                                        <span>Итого:</span>
+                                        <span id="finalTotal">{{ total|add:300|currency }}</span>
+                                    </div>
+                                </div>
+                                
+                                <button type="submit" class="place-order-btn">
+                                    Подтвердить заказ
+                                </button>
+                                
+                                <div class="security-info">
+                                    <i class="fas fa-shield-alt"></i>
+                                    <span>Ваши данные защищены</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Handle delivery method change
+document.querySelectorAll('input[name="delivery_method"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+        const deliveryAddress = document.getElementById('deliveryAddress');
+        const deliveryCost = document.getElementById('deliveryCost');
+        const finalTotal = document.getElementById('finalTotal');
+        
+        if (this.value === 'pickup') {
+            deliveryAddress.style.display = 'none';
+            deliveryCost.textContent = 'Бесплатно';
+            // Update total calculation
+        } else {
+            deliveryAddress.style.display = 'block';
+            deliveryCost.textContent = '300 ₽';
+            // Update total calculation
+        }
+    });
+});
+
+// Form validation
+document.querySelector('.checkout-form').addEventListener('submit', function(e) {
+    const requiredFields = this.querySelectorAll('[required]');
+    let isValid = true;
+    
+    requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+            field.classList.add('error');
+            isValid = false;
+        } else {
+            field.classList.remove('error');
+        }
+    });
+    
+    if (!isValid) {
+        e.preventDefault();
+        showMessage('Пожалуйста, заполните все обязательные поля', 'error');
+    }
+});
+
+// Phone number formatting
+document.getElementById('phone').addEventListener('input', function(e) {
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.length > 0) {
+        if (value[0] === '8') value = '7' + value.slice(1);
+        if (value[0] === '7') {
+            value = value.slice(0, 11);
+            const formatted = '+7 (' + value.slice(1, 4) + ') ' + value.slice(4, 7) + '-' + value.slice(7, 9) + '-' + value.slice(9, 11);
+            e.target.value = formatted;
+        }
+    }
+});
+</script>
+{% endblock %}

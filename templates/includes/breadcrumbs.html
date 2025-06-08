@@ -1,0 +1,10 @@
+<nav class="breadcrumbs">
+    {% for item in items %}
+        {% if not forloop.last %}
+            <a href="{{ item.url }}">{{ item.name }}</a>
+            <span>/</span>
+        {% else %}
+            <span>{{ item.name }}</span>
+        {% endif %}
+    {% endfor %}
+</nav>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}LeatherCraft - Кожаные изделия ручной работы{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="{% url 'store:index' %}">
+                        <h1>LeatherCraft</h1>
+                        <span>Ручная работа</span>
+                    </a>
+                </div>
+                
+                <nav class="nav">
+                    <a href="{% url 'store:index' %}">Главная</a>
+                    <a href="{% url 'store:catalog' %}">Каталог</a>
+                    <a href="{% url 'store:about' %}">О нас</a>
+                    <a href="{% url 'store:contact' %}">Контакты</a>
+                </nav>
+                
+                <div class="header-actions">
+                    <button class="search-btn" onclick="toggleSearch()">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <a href="{% url 'store:cart' %}" class="cart-btn">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span class="cart-count">{{ cart_items_count|default:0 }}</span>
+                    </a>
+                    <button class="menu-toggle" onclick="toggleMobileMenu()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Search Bar -->
+            <div class="search-bar" id="searchBar">
+                <form action="{% url 'store:catalog' %}" method="GET">
+                    <input type="text" name="search" placeholder="Поиск товаров..." id="searchInput" value="{{ request.GET.search|default:'' }}">
+                    <button type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <!-- Flash Messages -->
+    {% if messages %}
+        <div class="flash-messages">
+            {% for message in messages %}
+                <div class="message {{ message.tags }}">
+                    {{ message }}
+                    <button onclick="this.parentElement.remove()">×</button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>LeatherCraft</h3>
+                    <p>Создаем уникальные кожаные изделия с 2020 года</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Контакты</h4>
+                    <p><i class="fas fa-phone"></i> +7 (999) 123-45-67</p>
+                    <p><i class="fas fa-envelope"></i> info@leathercraft.ru</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Москва, ул. Мастеров, 15</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Информация</h4>
+                    <a href="{% url 'store:delivery' %}">Доставка и оплата</a>
+                    <a href="{% url 'store:returns' %}">Возврат и обмен</a>
+                    <a href="{% url 'store:care' %}">Уход за изделиями</a>
+                    <a href="{% url 'store:privacy' %}">Политика конфиденциальности</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Категории</h4>
+                    <a href="{% url 'store:catalog' %}?category=bags">Сумки</a>
+                    <a href="{% url 'store:catalog' %}?category=wallets">Кошельки</a>
+                    <a href="{% url 'store:catalog' %}?category=belts">Ремни</a>
+                    <a href="{% url 'store:catalog' %}?category=accessories">Аксессуары</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 LeatherCraft. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>Корзина</h3>
+            <button class="close-cart" onclick="toggleCart()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            {% load store_tags %}
+            {% if cart_items %}
+                {% for item in cart_items %}
+                    <div class="cart-item" data-product-id="{{ item.product.id }}">
+                        <img src="{% get_main_image item.product %}" alt="{{ item.product.name }}">
+                        <div class="cart-item-info">
+                            <h4>{{ item.product.name }}</h4>
+                            <div class="cart-item-price">{{ item.product.price|currency }}</div>
+                            <div class="quantity-controls">
+                                <button class="quantity-btn" onclick="updateCartQuantity({{ item.product.id }}, {{ item.quantity|add:'-1' }})">-</button>
+                                <span class="quantity">{{ item.quantity }}</span>
+                                <button class="quantity-btn" onclick="updateCartQuantity({{ item.product.id }}, {{ item.quantity|add:'1' }})">+</button>
+                            </div>
+                        </div>
+                        <button class="remove-item" onclick="removeFromCart({{ item.product.id }})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-cart">Корзина пуста</div>
+            {% endif %}
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Итого: <strong id="cartTotal">{% if cart_total %}{{ cart_total|currency }}{% else %}0 ₽{% endif %}</strong></span>
+            </div>
+            <a href="{% url 'store:checkout' %}" class="checkout-btn">
+                Оформить заказ
+            </a>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay" onclick="closeModals()"></div>
+
+    <script src="{% static 'js/script.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
