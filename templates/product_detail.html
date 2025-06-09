@@ -2,16 +2,14 @@
 {% load static %}
 {% load store_tags %}
 
-
-
-{% block title %}{{ product.name }} - LeatherCraft{% endblock %}
+{% block title %}{{ product.name }} - Carti_Leather{% endblock %}
 
 {% block content %}
     <section class="product-detail">
         <div class="container">
-            <!-- Breadcrumbs -->
+            <!-- Хлібні крихти -->
             <nav class="breadcrumbs">
-                <a href="{% url 'store:index' %}">Главная</a>
+                <a href="{% url 'store:index' %}">Головна</a>
                 <span>/</span>
                 <a href="{% url 'store:catalog' %}">Каталог</a>
                 {% if product.category %}
@@ -23,7 +21,7 @@
             </nav>
 
             <div class="product-detail-content">
-                <!-- Product Images -->
+                <!-- Зображення товару -->
                 <div class="product-images">
                     <div class="main-image">
                         <img src="{% get_main_image product %}"
@@ -40,7 +38,7 @@
                     {% endif %}
                 </div>
 
-                <!-- Product Info -->
+                <!-- Інформація про товар -->
                 <div class="product-info">
                     <h1>{{ product.name }}</h1>
 
@@ -58,13 +56,13 @@
                         {{ product.description|safe }}
                     </div>
 
-                    <!-- Product Options -->
+                    <!-- Опції товару -->
                     <form id="addToCartForm" method="POST" action="{% url 'store:add_to_cart' %}">
                         <input type="hidden" name="product_id" value="{{ product.id }}">
 
                         {% if product.colors %}
                             <div class="product-option">
-                                <label>Цвет:</label>
+                                <label>Колір:</label>
                                 <div class="option-buttons">
                                     {% for color in product.colors %}
                                         <label class="option-btn">
@@ -78,7 +76,7 @@
 
                         {% if product.sizes %}
                             <div class="product-option">
-                                <label>Размер:</label>
+                                <label>Розмір:</label>
                                 <div class="option-buttons">
                                     {% for size in product.sizes %}
                                         <label class="option-btn">
@@ -90,40 +88,40 @@
                             </div>
                         {% endif %}
 
-                        <!-- Quantity -->
+                        <!-- Кількість -->
                         <div class="quantity-section">
-                            <label>Количество:</label>
+                            <label>Кількість:</label>
                             <div class="quantity-controls">
                                 <button type="button" class="quantity-btn" onclick="changeQuantity(-1)">-</button>
                                 <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" id="quantityInput">
                                 <button type="button" class="quantity-btn" onclick="changeQuantity(1)">+</button>
                             </div>
-                            <span class="stock-info">В наличии: {{ product.stock }} шт.</span>
+                            <span class="stock-info">В наявності: {{ product.stock }} шт.</span>
                         </div>
 
-                        <!-- Add to Cart Button -->
+                        <!-- Кнопка "Додати в корзину" -->
                         <div class="product-actions">
                             {% if product.stock > 0 %}
                                 <button type="submit" class="add-to-cart-btn">
                                     <i class="fas fa-shopping-cart"></i>
-                                    Добавить в корзину
+                                    Додати в корзину
                                 </button>
                             {% else %}
                                 <button type="button" class="add-to-cart-btn disabled" disabled>
-                                    Нет в наличии
+                                    Немає в наявності
                                 </button>
                             {% endif %}
                             <button type="button" class="wishlist-btn" onclick="toggleWishlist({{ product.id }})">
                                 <i class="far fa-heart"></i>
-                                В избранное
+                                У вибране
                             </button>
                         </div>
                     </form>
 
-                    <!-- Product Features -->
+                    <!-- Особливості товару -->
                     {% if product.features %}
                         <div class="product-features">
-                            <h3>Особенности:</h3>
+                            <h3>Особливості:</h3>
                             <ul>
                                 {% for feature in product.features %}
                                     <li>{{ feature }}</li>
@@ -132,7 +130,7 @@
                         </div>
                     {% endif %}
 
-                    <!-- Product Specifications -->
+                    <!-- Характеристики товару -->
                     {% if product.specifications %}
                         <div class="product-specifications">
                             <h3>Характеристики:</h3>
@@ -149,12 +147,12 @@
                 </div>
             </div>
 
-            <!-- Product Tabs -->
+            <!-- Вкладки товару -->
             <div class="product-tabs">
                 <div class="tab-buttons">
-                    <button class="tab-btn active" onclick="showTab('description')">Описание</button>
+                    <button class="tab-btn active" onclick="showTab('description')">Опис</button>
                     <button class="tab-btn" onclick="showTab('specifications')">Характеристики</button>
-                    <button class="tab-btn" onclick="showTab('care')">Уход</button>
+                    <button class="tab-btn" onclick="showTab('care')">Догляд</button>
                     <button class="tab-btn" onclick="showTab('delivery')">Доставка</button>
                 </div>
 
@@ -173,34 +171,34 @@
                                 {% endfor %}
                             </table>
                         {% else %}
-                            <p>Характеристики не указаны</p>
+                            <p>Характеристики не вказані</p>
                         {% endif %}
                     </div>
                     <div id="care" class="tab-pane">
-                        {{ product.care_instructions|default:"<h4>Общие рекомендации по уходу за кожаными изделиями:</h4>
+                        {{ product.care_instructions|default:"<h4>Загальні рекомендації по догляду за шкіряними виробами:</h4>
 <ul>
-    <li>Избегайте попадания влаги</li>
-    <li>Храните в сухом месте</li>
-    <li>Используйте специальные средства для ухода за кожей</li>
-    <li>Избегайте прямых солнечных лучей</li>
+    <li>Уникайте потрапляння вологи</li>
+    <li>Зберігайте в сухому місці</li>
+    <li>Використовуйте спеціальні засоби для догляду за шкірою</li>
+    <li>Уникайте прямих сонячних променів</li>
 </ul>"|safe }}
                     </div>
                     <div id="delivery" class="tab-pane">
-                        <h4>Условия доставки:</h4>
+                        <h4>Умови доставки:</h4>
                         <ul>
-                            <li>Доставка по Москве - 300 ₽</li>
-                            <li>Доставка по России - от 500 ₽</li>
-                            <li>Бесплатная доставка при заказе от 10 000 ₽</li>
-                            <li>Срок доставки: 1-3 рабочих дня</li>
+                            <li>Доставка по Москві – 300 ₽</li>
+                            <li>Доставка по Росії – від 500 ₽</li>
+                            <li>Безкоштовна доставка при замовленні від 10 000 ₽</li>
+                            <li>Термін доставки: 1-3 робочі дні</li>
                         </ul>
                     </div>
                 </div>
             </div>
 
-            <!-- Related Products -->
+            <!-- Схожі товари -->
             {% if related_products %}
                 <section class="related-products">
-                    <h2>Похожие товары</h2>
+                    <h2>Схожі товари</h2>
                     <div class="products-grid">
                         {% for product in related_products %}
                             <div class="product-card" onclick="location.href='{% url 'store:product_detail' product.id %}'">
@@ -242,27 +240,27 @@ function changeQuantity(delta) {
 }
 
 function showTab(tabName) {
-    // Hide all tab panes
+    // Приховати всі вкладки
     document.querySelectorAll('.tab-pane').forEach(pane => {
         pane.classList.remove('active');
     });
 
-    // Remove active class from all buttons
+    // Зняти активність з усіх кнопок
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.remove('active');
     });
 
-    // Show selected tab
+    // Показати вибрану вкладку
     document.getElementById(tabName).classList.add('active');
     event.target.classList.add('active');
 }
 
 function toggleWishlist(productId) {
-    // Implement wishlist functionality
-    console.log('Toggle wishlist for product:', productId);
+    // Функція додавання у вибране
+    console.log('Перемикання вибраного для товару:', productId);
 }
 
-// Handle form submission
+// Обробка відправлення форми
 document.getElementById('addToCartForm').addEventListener('submit', function(e) {
     e.preventDefault();
 
@@ -278,14 +276,14 @@ document.getElementById('addToCartForm').addEventListener('submit', function(e) 
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            showMessage('Товар добавлен в корзину', 'success');
+            showMessage('Товар додано до корзини', 'success');
             updateCartCount(data.cart_count);
         } else {
-            showMessage(data.message || 'Ошибка при добавлении товара', 'error');
+            showMessage(data.message || 'Помилка при додаванні товару', 'error');
         }
     })
     .catch(error => {
-        showMessage('Произошла ошибка', 'error');
+        showMessage('Сталася помилка', 'error');
     });
 });
 </script>

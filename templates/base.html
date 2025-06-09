@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}LeatherCraft - Кожаные изделия ручной работы{% endblock %}</title>
+    <title>{% block title %}Carti_Leather{% endblock %}</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -17,16 +17,16 @@
             <div class="header-content">
                 <div class="logo">
                     <a href="{% url 'store:index' %}">
-                        <h1>LeatherCraft</h1>
-                        <span>Ручная работа</span>
+                        <h1>Carti_Leather</h1>
+                        <span>Тільки ручна робота!</span>
                     </a>
                 </div>
                 
                 <nav class="nav">
-                    <a href="{% url 'store:index' %}">Главная</a>
+                    <a href="{% url 'store:index' %}">Головна</a>
                     <a href="{% url 'store:catalog' %}">Каталог</a>
-                    <a href="{% url 'store:about' %}">О нас</a>
-                    <a href="{% url 'store:contact' %}">Контакты</a>
+                    <a href="{% url 'store:about' %}">Про нас</a>
+                    <a href="{% url 'store:contact' %}">Зв'язок з нами</a>
                 </nav>
                 
                 <div class="header-actions">
@@ -46,7 +46,7 @@
             <!-- Search Bar -->
             <div class="search-bar" id="searchBar">
                 <form action="{% url 'store:catalog' %}" method="GET">
-                    <input type="text" name="search" placeholder="Поиск товаров..." id="searchInput" value="{{ request.GET.search|default:'' }}">
+                    <input type="text" name="search" placeholder="Пошук товарів..." id="searchInput" value="{{ request.GET.search|default:'' }}">
                     <button type="submit">
                         <i class="fas fa-search"></i>
                     </button>
@@ -54,7 +54,6 @@
             </div>
         </div>
     </header>
-
     <!-- Flash Messages -->
     {% if messages %}
         <div class="flash-messages">
@@ -77,37 +76,37 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h3>LeatherCraft</h3>
-                    <p>Создаем уникальные кожаные изделия с 2020 года</p>
+                    <h3>Carti_Leather</h3>
+                    <p>Створюємо унікальні шкіряні вироби з 2020 року</p>
                     <div class="social-links">
-                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.instagram.com/carti_ua/"><i class="fab fa-instagram"></i></a>
                         <a href="#"><i class="fab fa-facebook"></i></a>
                         <a href="#"><i class="fab fa-telegram"></i></a>
                     </div>
                 </div>
                 <div class="footer-section">
-                    <h4>Контакты</h4>
-                    <p><i class="fas fa-phone"></i> +7 (999) 123-45-67</p>
-                    <p><i class="fas fa-envelope"></i> info@leathercraft.ru</p>
-                    <p><i class="fas fa-map-marker-alt"></i> Москва, ул. Мастеров, 15</p>
+                    <h4>Контакти</h4>
+                    <p><i class="fas fa-phone"></i> +380 96 429 0768</p>
+                    <p><i class="fas fa-envelope"></i> cartiualeather@gmail.com</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Створено в Україні</p>
                 </div>
                 <div class="footer-section">
-                    <h4>Информация</h4>
-                    <a href="{% url 'store:delivery' %}">Доставка и оплата</a>
-                    <a href="{% url 'store:returns' %}">Возврат и обмен</a>
-                    <a href="{% url 'store:care' %}">Уход за изделиями</a>
-                    <a href="{% url 'store:privacy' %}">Политика конфиденциальности</a>
+                    <h4>Інформація</h4>
+                    <a href="{% url 'store:delivery' %}">Доставка та оплата</a>
+                    <a href="{% url 'store:returns' %}">Повернення та обмін</a>
+                    <a href="{% url 'store:care' %}">Догляд за виробами</a>
+                    <a href="{% url 'store:privacy' %}">Політика конфіденційності</a>
                 </div>
                 <div class="footer-section">
-                    <h4>Категории</h4>
+                    <h4>Категорії</h4>
                     <a href="{% url 'store:catalog' %}?category=bags">Сумки</a>
-                    <a href="{% url 'store:catalog' %}?category=wallets">Кошельки</a>
-                    <a href="{% url 'store:catalog' %}?category=belts">Ремни</a>
-                    <a href="{% url 'store:catalog' %}?category=accessories">Аксессуары</a>
+                    <a href="{% url 'store:catalog' %}?category=wallets">Гаманці</a>
+                    <a href="{% url 'store:catalog' %}?category=belts">Ремені</a>
+                    <a href="{% url 'store:catalog' %}?category=accessories">Аксесуари</a>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 LeatherCraft. Все права защищены.</p>
+                <p>&copy; 2025 Carti_Leather. Усі права захищені.</p>
             </div>
         </div>
     </footer>
@@ -115,7 +114,7 @@
     <!-- Cart Sidebar -->
     <div class="cart-sidebar" id="cartSidebar">
         <div class="cart-header">
-            <h3>Корзина</h3>
+            <h3>Кошик</h3>
             <button class="close-cart" onclick="toggleCart()">
                 <i class="fas fa-times"></i>
             </button>
@@ -141,15 +140,15 @@
                     </div>
                 {% endfor %}
             {% else %}
-                <div class="empty-cart">Корзина пуста</div>
+                <div class="empty-cart">Кошик пустий</div>
             {% endif %}
         </div>
         <div class="cart-footer">
             <div class="cart-total">
-                <span>Итого: <strong id="cartTotal">{% if cart_total %}{{ cart_total|currency }}{% else %}0 ₽{% endif %}</strong></span>
+                <span>Всього: <strong id="cartTotal">{% if cart_total %}{{ cart_total|currency }}{% else %}0 ₽{% endif %}</strong></span>
             </div>
             <a href="{% url 'store:checkout' %}" class="checkout-btn">
-                Оформить заказ
+                Оформити замовлення
             </a>
         </div>
     </div>

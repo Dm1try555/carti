@@ -2,13 +2,12 @@
 
 {% load static %}
 
-
-{% block title %}Контакты - LeatherCraft{% endblock %}
+{% block title %}Контакти - Carti_Leather{% endblock %}
 
 {% block content %}
     <section class="contact-page">
         <div class="container">
-            <h1>Контакты</h1>
+            <h1>Контакти</h1>
             
             <div class="contact-content">
                 <div class="contact-info">
@@ -17,9 +16,9 @@
                             <i class="fas fa-map-marker-alt"></i>
                         </div>
                         <div class="contact-details">
-                            <h3>Адрес</h3>
-                            <p>г. Москва, ул. Мастеров, 15<br>
-                            ТЦ "Ремесленник", 2 этаж</p>
+                            <h3>Адреса</h3>
+                            <p>м. Москва, вул. Майстрів, 15<br>
+                            ТЦ "Ремісник", 2 поверх</p>
                         </div>
                     </div>
                     
@@ -30,7 +29,7 @@
                         <div class="contact-details">
                             <h3>Телефон</h3>
                             <p><a href="tel:+79991234567">+7 (999) 123-45-67</a><br>
-                            <small>Ежедневно с 10:00 до 20:00</small></p>
+                            <small>Щодня з 10:00 до 20:00</small></p>
                         </div>
                     </div>
                     
@@ -41,7 +40,7 @@
                         <div class="contact-details">
                             <h3>Email</h3>
                             <p><a href="mailto:info@leathercraft.ru">info@leathercraft.ru</a><br>
-                            <small>Ответим в течение 24 часов</small></p>
+                            <small>Відповідаємо протягом 24 годин</small></p>
                         </div>
                     </div>
                     
@@ -50,21 +49,21 @@
                             <i class="fas fa-clock"></i>
                         </div>
                         <div class="contact-details">
-                            <h3>Режим работы</h3>
+                            <h3>Графік роботи</h3>
                             <p>Пн-Пт: 10:00 - 20:00<br>
-                            Сб-Вс: 11:00 - 19:00</p>
+                            Сб-Нд: 11:00 - 19:00</p>
                         </div>
                     </div>
                 </div>
                 
                 <div class="contact-form-section">
-                    <h2>Напишите нам</h2>
+                    <h2>Напишіть нам</h2>
                     <form method="POST" action="{% url 'store:send_message' %}" class="contact-form">
                         {% csrf_token %}
                         
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="name">Имя *</label>
+                                <label for="name">Ім'я *</label>
                                 <input type="text" id="name" name="name" required>
                             </div>
                             <div class="form-group">
@@ -79,19 +78,19 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="subject">Тема сообщения *</label>
+                            <label for="subject">Тема повідомлення *</label>
                             <select id="subject" name="subject" required>
-                                <option value="">Выберите тему</option>
-                                <option value="order">Вопрос по заказу</option>
-                                <option value="product">Вопрос о товаре</option>
-                                <option value="custom">Индивидуальный заказ</option>
-                                <option value="complaint">Жалоба</option>
-                                <option value="other">Другое</option>
+                                <option value="">Оберіть тему</option>
+                                <option value="order">Питання щодо замовлення</option>
+                                <option value="product">Питання про товар</option>
+                                <option value="custom">Індивідуальне замовлення</option>
+                                <option value="complaint">Скарга</option>
+                                <option value="other">Інше</option>
                             </select>
                         </div>
                         
                         <div class="form-group">
-                            <label for="message">Сообщение *</label>
+                            <label for="message">Повідомлення *</label>
                             <textarea id="message" name="message" rows="5" required></textarea>
                         </div>
                         
@@ -99,73 +98,73 @@
                             <label class="checkbox-label">
                                 <input type="checkbox" name="agree" required>
                                 <span class="checkmark"></span>
-                                Согласен с <a href="{% url 'store:privacy' %}" target="_blank">политикой конфиденциальности</a>
+                                Погоджуюсь з <a href="{% url 'store:privacy' %}" target="_blank">політикою конфіденційності</a>
                             </label>
                         </div>
                         
-                        <button type="submit" class="submit-btn">Отправить сообщение</button>
+                        <button type="submit" class="submit-btn">Відправити повідомлення</button>
                     </form>
                 </div>
             </div>
             
             <!-- Map -->
             <div class="map-section">
-                <h2>Как нас найти</h2>
+                <h2>Як нас знайти</h2>
                 <div class="map-container">
                     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2244.4!2d37.6173!3d55.7558!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNTXCsDQ1JzIwLjkiTiAzN8KwMzcnMDIuMyJF!5e0!3m2!1sru!2sru!4v1234567890" 
                             width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
                 </div>
                 <div class="map-info">
-                    <h3>Как добраться:</h3>
+                    <h3>Як дістатися:</h3>
                     <ul>
-                        <li><strong>На метро:</strong> станция "Красные ворота", выход 2, 5 минут пешком</li>
-                        <li><strong>На автобусе:</strong> остановка "Мастеров", маршруты 15, 23, 45</li>
-                        <li><strong>На автомобиле:</strong> парковка во дворе ТЦ, первые 2 часа бесплатно</li>
+                        <li><strong>Метро:</strong> станція "Червоні ворота", вихід 2, 5 хвилин пішки</li>
+                        <li><strong>Автобусом:</strong> зупинка "Майстрів", маршрути 15, 23, 45</li>
+                        <li><strong>Автомобілем:</strong> парковка у дворі ТЦ, перші 2 години безкоштовно</li>
                     </ul>
                 </div>
             </div>
             
             <!-- FAQ -->
             <div class="faq-section">
-                <h2>Часто задаваемые вопросы</h2>
+                <h2>Часті питання</h2>
                 <div class="faq-list">
                     <div class="faq-item">
                         <div class="faq-question" onclick="toggleFaq(this)">
-                            <h3>Можно ли заказать изделие по индивидуальным размерам?</h3>
+                            <h3>Чи можна замовити виріб за індивідуальними розмірами?</h3>
                             <i class="fas fa-chevron-down"></i>
                         </div>
                         <div class="faq-answer">
-                            <p>Да, мы принимаем индивидуальные заказы. Стоимость и сроки изготовления обсуждаются отдельно в зависимости от сложности изделия.</p>
+                            <p>Так, ми приймаємо індивідуальні замовлення. Вартість і терміни виготовлення обговорюються окремо залежно від складності виробу.</p>
                         </div>
                     </div>
                     
                     <div class="faq-item">
                         <div class="faq-question" onclick="toggleFaq(this)">
-                            <h3>Какие гарантии вы предоставляете?</h3>
+                            <h3>Які гарантії ви надаєте?</h3>
                             <i class="fas fa-chevron-down"></i>
                         </div>
                         <div class="faq-answer">
-                            <p>Мы предоставляем гарантию 1 год на все изделия от дефектов производства. Гарантия не распространяется на естественный износ и повреждения от неправильного использования.</p>
+                            <p>Ми надаємо гарантію 1 рік на всі вироби від виробничих дефектів. Гарантія не поширюється на природний знос і пошкодження через неправильне використання.</p>
                         </div>
                     </div>
                     
                     <div class="faq-item">
                         <div class="faq-question" onclick="toggleFaq(this)">
-                            <h3>Сколько времени занимает изготовление заказа?</h3>
+                            <h3>Скільки часу займає виготовлення замовлення?</h3>
                             <i class="fas fa-chevron-down"></i>
                         </div>
                         <div class="faq-answer">
-                            <p>Стандартные изделия из каталога обычно есть в наличии. Индивидуальные заказы изготавливаются от 7 до 21 дня в зависимости от сложности.</p>
+                            <p>Стандартні вироби з каталогу зазвичай є в наявності. Індивідуальні замовлення виготовляються від 7 до 21 дня залежно від складності.</p>
                         </div>
                     </div>
                     
                     <div class="faq-item">
                         <div class="faq-question" onclick="toggleFaq(this)">
-                            <h3>Можно ли вернуть или обменять товар?</h3>
+                            <h3>Чи можна повернути або обміняти товар?</h3>
                             <i class="fas fa-chevron-down"></i>
                         </div>
                         <div class="faq-answer">
-                            <p>Возврат и обмен возможен в течение 14 дней с момента покупки при сохранении товарного вида и наличии чека. Индивидуальные заказы возврату не подлежат.</p>
+                            <p>Повернення та обмін можливі протягом 14 днів з моменту покупки за умови збереження товарного вигляду та наявності чеку. Індивідуальні замовлення не підлягають поверненню.</p>
                         </div>
                     </div>
                 </div>

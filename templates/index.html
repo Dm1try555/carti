@@ -2,27 +2,27 @@
 {% load static %}
 
 
-{% block title %}LeatherCraft - Кожаные изделия ручной работы{% endblock %}
+{% block title %}Carti_Leather - Шкіряні вироби ручної роботи{% endblock %}
 
 {% block content %}
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-content">
-            <h2>Эксклюзивные кожаные изделия</h2>
-            <p>Каждое изделие создается вручную с особым вниманием к деталям</p>
+            <h2>Ексклюзивні шкіряні вироби</h2>
+            <p>Кожен виріб створюється вручну з особливою увагою до деталей</p>
             <a href="{% url 'store:catalog' %}" class="cta-btn">
-                Смотреть каталог
+                Переглянути каталог
             </a>
         </div>
         <div class="hero-image">
-            <img src="{% static 'images/hero-image.jpg' %}" alt="Кожаные изделия ручной работы">
+            <img src="{% static 'images/hero-image.jpg' %}" alt="Шкіряні вироби ручної роботи">
         </div>
     </section>
 
     <!-- Categories -->
     <section class="categories">
         <div class="container">
-            <h2>Категории товаров</h2>
+            <h2>Категорії товарів</h2>
             <div class="categories-grid">
                 {% for category in categories %}
                     <div class="category-card" onclick="location.href='{% url 'store:catalog' %}?category={{ category.slug }}'">
@@ -38,7 +38,7 @@
     <!-- Featured Products -->
     <section class="featured-products">
         <div class="container">
-            <h2>Популярные товары</h2>
+            <h2>Популярні товари</h2>
             <div class="products-grid">
                 {% load store_tags %}
                 {% for product in featured_products %}
@@ -46,7 +46,7 @@
                         <div class="product-image">
                             <img src="{% get_main_image product %}" alt="{{ product.name }}">
                             {% if product.is_featured %}
-                                <div class="product-badge">Хит продаж</div>
+                                <div class="product-badge">Хіт продажів</div>
                             {% endif %}
                             {% if product.is_new %}
                                 <div class="product-badge new">Новинка</div>
@@ -66,7 +66,7 @@
                 {% endfor %}
             </div>
             <div class="text-center">
-                <a href="{% url 'store:catalog' %}" class="load-more-btn">Смотреть все товары</a>
+                <a href="{% url 'store:catalog' %}" class="load-more-btn">Переглянути всі товари</a>
             </div>
         </div>
     </section>
@@ -76,29 +76,29 @@
         <div class="container">
             <div class="about-content">
                 <div class="about-text">
-                    <h2>О нашем мастерстве</h2>
-                    <p>Мы создаем уникальные кожаные изделия, используя традиционные техники и современные технологии. Каждое изделие проходит тщательный отбор материалов и многоэтапный процесс изготовления.</p>
+                    <h2>Про наше мистецтво</h2>
+                    <p>Ми створюємо унікальні шкіряні вироби, використовуючи традиційні техніки та сучасні технології. Кожен виріб проходить ретельний відбір матеріалів та багатоступеневий процес виготовлення.</p>
                     <div class="features">
                         <div class="feature">
                             <i class="fas fa-hand-paper"></i>
-                            <h3>Ручная работа</h3>
-                            <p>Каждое изделие создается вручную опытными мастерами</p>
+                            <h3>Ручна робота</h3>
+                            <p>Кожен виріб створюється вручну досвідченими майстрами</p>
                         </div>
                         <div class="feature">
                             <i class="fas fa-leaf"></i>
-                            <h3>Натуральная кожа</h3>
-                            <p>Используем только высококачественную натуральную кожу</p>
+                            <h3>Натуральна шкіра</h3>
+                            <p>Використовуємо тільки високоякісну натуральну шкіру</p>
                         </div>
                         <div class="feature">
                             <i class="fas fa-shield-alt"></i>
-                            <h3>Гарантия качества</h3>
-                            <p>Предоставляем гарантию на все наши изделия</p>
+                            <h3>Гарантія якості</h3>
+                            <p>Надаємо гарантію на всі наші вироби</p>
                         </div>
                     </div>
-                    <a href="{% url 'store:about' %}" class="cta-btn">Узнать больше</a>
+                    <a href="{% url 'store:about' %}" class="cta-btn">Дізнатися більше</a>
                 </div>
                 <div class="about-image">
-                    <img src="{% static 'images/about-image.jpg' %}" alt="Процесс изготовления">
+                    <img src="{% static 'images/about-image.jpg' %}" alt="Процес виготовлення">
                 </div>
             </div>
         </div>

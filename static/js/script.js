@@ -191,11 +191,12 @@ function closeModals() {
 
 // Mobile menu
 function toggleMobileMenu() {
-  const nav = document.querySelector(".nav")
+  const nav = document.querySelector(".nav");
   if (nav) {
-    nav.classList.toggle("mobile-active")
+    nav.classList.toggle("mobile-active");
   }
 }
+
 
 // Utility functions
 function showMessage(text, type = "info") {

@@ -28,7 +28,7 @@ def index(request):
         'categories': categories,
         'featured_products': featured_products,
     }
-    return render(request, 'index.html', context)
+    return render(request, 'store/index.html', context)
 
 
 def catalog(request):
@@ -96,7 +96,7 @@ def catalog(request):
         'available_colors': sorted(all_colors),
         'search_query': search_query,
     }
-    return render(request, 'catalog.html', context)
+    return render(request, 'store/catalog.html', context)
 
 
 def product_detail(request, id):
@@ -117,7 +117,7 @@ def product_detail(request, id):
         'product': product,
         'related_products': related_products,
     }
-    return render(request, 'product_detail.html', context)
+    return render(request, 'store/product_detail.html', context)
 
 
 def cart_view(request):
@@ -399,7 +399,7 @@ def process_order(request):
 
 def about(request):
     """Страница о компании"""
-    return render(request, 'about.html')
+    return render(request, 'store/about.html')
 
 
 def contact(request):
