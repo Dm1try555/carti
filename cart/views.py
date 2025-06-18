@@ -9,24 +9,24 @@ import json
 
 
 def cart_view(request):
-    """Страница корзины"""
+    """Сторінка кошика"""
     cart = get_or_create_cart(request)
     cart_items = cart.items.select_related('product').prefetch_related('product__images')
     
     subtotal = cart.total_price
-    delivery_cost = 300 if cart.total_items > 0 else 0
+    delivery_cost = 300 if cart.total_items > 0 else 0  # Безкоштовна доставка від 10000
     if subtotal >= 10000:
         delivery_cost = 0
-    
-    # Применение промокода
+
+    # Застосування промокоду
     promo_code = request.session.get('promo_code')
     discount = 0
     if promo_code:
-        # Логика промокода будет в отдельном приложении
+        # Логіка промокоду буде в окремому додатку
         pass
-    
+
     total = subtotal + delivery_cost - discount
-    
+
     context = {
         'cart_items': cart_items,
         'subtotal': subtotal,
@@ -40,101 +40,101 @@ def cart_view(request):
 
 @require_POST
 def add_to_cart(request):
-    """Добавление товара в корзину"""
+    """Додавання товару до кошика"""
     try:
         data = json.loads(request.body)
         product_id = data.get('product_id')
         quantity = int(data.get('quantity', 1))
-        
+
         product = get_object_or_404(Product, id=product_id, is_active=True)
-        
+
         if quantity > product.stock:
             return JsonResponse({
                 'success': False,
-                'message': 'Недостаточно товара на складе'
+                'message': 'Недостатньо товару на складі'
             })
-        
+
         cart = get_or_create_cart(request)
         cart_item, created = CartItem.objects.get_or_create(
             cart=cart,
             product=product,
             defaults={'quantity': quantity}
         )
-        
+
         if not created:
             cart_item.quantity += quantity
             if cart_item.quantity > product.stock:
                 return JsonResponse({
                     'success': False,
-                    'message': 'Недостаточно товара на складе'
+                    'message': 'Недостатньо товару на складі'
                 })
             cart_item.save()
-        
+
         return JsonResponse({
             'success': True,
             'cart_count': cart.total_items,
-            'message': 'Товар добавлен в корзину'
+            'message': 'Товар додано до кошика'
         })
-        
+
     except Exception as e:
         return JsonResponse({
             'success': False,
-            'message': 'Произошла ошибка'
+            'message': 'Сталася помилка'
         })
 
 
 @require_POST
 def update_cart(request):
-    """Обновление количества товара в корзине"""
+    """Оновлення кількості товару в кошику"""
     try:
         data = json.loads(request.body)
         product_id = data.get('product_id')
         quantity = int(data.get('quantity', 1))
-        
+
         cart = get_or_create_cart(request)
         cart_item = get_object_or_404(CartItem, cart=cart, product_id=product_id)
-        
+
         if quantity <= 0:
             cart_item.delete()
         else:
             if quantity > cart_item.product.stock:
                 return JsonResponse({
                     'success': False,
-                    'message': 'Недостаточно товара на складе'
+                    'message': 'Недостатньо товару на складі'
                 })
             cart_item.quantity = quantity
             cart_item.save()
-        
+
         return JsonResponse({
             'success': True,
             'cart_count': cart.total_items
         })
-        
+
     except Exception as e:
         return JsonResponse({
             'success': False,
-            'message': 'Произошла ошибка'
+            'message': 'Сталася помилка'
         })
 
 
 @require_POST
 def remove_from_cart(request):
-    """Удаление товара из корзины"""
+    """Видалення товару з кошика"""
     try:
         data = json.loads(request.body)
         product_id = data.get('product_id')
-        
+
         cart = get_or_create_cart(request)
         cart_item = get_object_or_404(CartItem, cart=cart, product_id=product_id)
         cart_item.delete()
-        
+
         return JsonResponse({
             'success': True,
             'cart_count': cart.total_items
         })
-        
+
     except Exception as e:
         return JsonResponse({
             'success': False,
-            'message': 'Произошла ошибка'
+            'message': 'Сталася помилка'
         })

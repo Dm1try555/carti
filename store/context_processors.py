@@ -6,3 +6,12 @@ def cart_context(request):
     return {
         'cart_items_count': get_cart_items_count(request),
     }
+
+
+from .models import Category
+
+def categories_processor(request):
+    return {
+        'categories': Category.objects.filter(is_active=True)
+    }
+

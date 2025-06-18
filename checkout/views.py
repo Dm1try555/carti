@@ -96,5 +96,5 @@ def process_order(request):
     if 'promo_code' in request.session:
         del request.session['promo_code']
     
-    messages.success(request, f'Заказ #{order.order_number} успешно оформлен! Мы свяжемся с вами в ближайшее время.')
+    messages.success(request, f'Замовлення #{order.order_number} успішно оформлено! Ми зв\'яжемося з вами найближчим часом.')
     return redirect('store:index')

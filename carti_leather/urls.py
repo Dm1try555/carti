@@ -19,6 +19,6 @@ if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 # Admin site customization
-admin.site.site_header = 'LeatherCraft Админ-панель'
-admin.site.site_title = 'LeatherCraft'
-admin.site.index_title = 'Управление магазином'
+admin.site.site_header = 'Carti_Leather Адмін-панель'
+admin.site.site_title = 'Carti_Leather'
+admin.site.index_title = 'Управління магазином'

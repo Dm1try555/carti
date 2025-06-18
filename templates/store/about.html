@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+
+{% block title %}Про нас - Carti_Leather{% endblock %}
+
+{% block content %}
+    <section class="about-page">
+        <div class="container">
+            <!-- Hero Section -->
+            <div class="about-hero">
+                <div class="about-hero-content">
+                    <h1>Про нашу майстерність</h1>
+                    <p class="lead">Ми створюємо унікальні шкіряні вироби, використовуючи традиційні техніки та сучасні технології. Кожен виріб проходить ретельний відбір матеріалів та багатоетапний процес виготовлення.</p>
+                </div>
+                <div class="about-hero-image">
+                    <img src="{% static 'images/about-hero.jpg' %}" alt="Мастерская LeatherCraft">
+                </div>
+            </div>
+
+            <!-- Our Story -->
+            <div class="our-story">
+                <div class="story-content">
+                    <h2>Наша історія</h2>
+                    <p>Carti_Leather була заснована у 2020 році групою ентузіастів, закоханих у мистецтво роботи зі шкірою. Почавши з невеликої майстерні, ми поступово виросли в команду професійних майстрів, кожен із яких привносить свій унікальний досвід та бачення.</p>
+                    
+                    <p>Наша філософія ґрунтується на принципах якості, довговічності та індивідуального підходу до кожного клієнта. Ми віримо, що шкіряні вироби повинні служити роками, стаючи кращими з віком і набуваючи унікальної патини.</p>
+                    
+                    <div class="story-stats">
+                        <div class="stat">
+                            <span class="stat-number">500+</span>
+                            <span class="stat-label">Задоволених клієнтів</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">1000+</span>
+                            <span class="stat-label">Виробів створено</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">5</span>
+                            <span class="stat-label">Років досвіду</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="story-image">
+                    <img src="{% static 'images/our-story.jpg' %}" alt="Історія Carti_Leather">
+                </div>
+            </div>
+
+            <!-- Our Values -->
+            <div class="our-values">
+                <h2>Наші цінності</h2>
+                <div class="values-grid">
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <i class="fas fa-hand-paper"></i>
+                        </div>
+                        <h3>Ручна робота</h3>
+                        <p>Кожен виріб створюється вручну досвідченими майстрами з використанням традиційних технік та сучасних інструментів.</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <h3>Натуральні матеріали</h3>
+                        <p>Ми використовуємо лише високоякісну натуральну шкіру від перевірених постачальників, які дбають про екологію.</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Гарантія якості</h3>
+                        <p>Надаємо гарантію на всі наші вироби та готові виправити будь-які дефекти виробництва.</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <h3>Індивідуальний підхід</h3>
+                        <p>Готові створити унікальний виріб за вашими побажаннями та вимогами.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Production Process -->
+            <div class="production-process">
+                <h2>Процес виробництва</h2>
+                <div class="process-steps">
+                    <div class="process-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3>Вибір матеріалу</h3>
+                            <p>Ретельно відбираємо шкіру найвищої якості, перевіряючи кожен шматок на відповідність нашим стандартам.</p>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3>Створення викрійки</h3>
+                            <p>Розробляємо точні форми з урахуванням особливостей шкіри та вимог до виробу.</p>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3>Розкрий та підготовка</h3>
+                            <p>Акуратно вирізаємо деталі та готуємо їх до збирання, обробляючи краї.</p>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h3>Збір та прошивка</h3>
+                            <p>Збираємо виріб, використовуючи міцні нитки та перевірені техніки прошивки.</p>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h3>Фінішна обробка</h3>
+                            <p>Поліруємо, фарбуємо та захищаємо виріб спеціальними складами.</p>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">6</div>
+                        <div class="step-content">
+                            <h3>Контроль якості</h3>
+                            <p>Проводимо фінальну перевірку якості перед упаковкою та відправкою клієнту.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Team -->
+            <div class="our-team">
+                <h2>Наша команда</h2>
+                <div class="team-grid">
+                    <div class="team-member">
+                        <img src="{% static 'images/team-1.jpg' %}" alt="Алексей Иванов">
+                        <h3>Алексей Иванов</h3>
+                        <p>Основатель и главный мастер</p>
+                        <span>15 лет опыта в кожевенном деле</span>
+                    </div>
+                    <div class="team-member">
+                        <img src="{% static 'images/team-2.jpg' %}" alt="Мария Петрова">
+                        <h3>Мария Петрова</h3>
+                        <p>Дизайнер и мастер по сумкам</p>
+                        <span>Специализация на женских аксессуарах</span>
+                    </div>
+                    <div class="team-member">
+                        <img src="{% static 'images/team-3.jpg' %}" alt="Дмитрий Сидоров">
+                        <h3>Дмитрий Сидоров</h3>
+                        <p>Мастер по мужским аксессуарам</p>
+                        <span>Эксперт по ремням и портфелям</span>
+                    </div>
+                    <div class="team-member">
+                        <img src="{% static 'images/team-4.jpg' %}" alt="Елена Козлова">
+                        <h3>Елена Козлова</h3>
+                        <p>Мастер по декоративной отделке</p>
+                        <span>Специалист по тиснению и гравировке</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Certificates -->
+            <div class="certificates">
+                <h2>Сертификаты и награды</h2>
+                <div class="certificates-grid">
+                    <div class="certificate">
+                        <img src="{% static 'images/cert-1.jpg' %}" alt="Сертификат качества">
+                        <h3>Сертификат качества ISO 9001</h3>
+                    </div>
+                    <div class="certificate">
+                        <img src="{% static 'images/cert-2.jpg' %}" alt="Награда за лучшее качество">
+                        <h3>Награда "Лучшее качество 2024"</h3>
+                    </div>
+                    <div class="certificate">
+                        <img src="{% static 'images/cert-3.jpg' %}" alt="Экологический сертификат">
+                        <h3>Экологический сертификат</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

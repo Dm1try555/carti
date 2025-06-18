@@ -1,19 +1,18 @@
 from django.db import models
 from django.urls import reverse
-from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class Category(models.Model):
-    name = models.CharField('Название', max_length=100)
+    name = models.CharField('Назва категорії', max_length=100)
     slug = models.SlugField('URL', unique=True)
-    description = models.TextField('Описание', blank=True)
-    image = models.ImageField('Изображение', upload_to='categories/', blank=True, null=True)
+    description = models.TextField('Опис', blank=True)
+    image = models.ImageField('Зображення', upload_to='categories/', blank=True, null=True)
     is_active = models.BooleanField('Активна', default=True)
-    created_at = models.DateTimeField('Создано', auto_now_add=True)
+    created_at = models.DateTimeField('Створено', auto_now_add=True)
 
     class Meta:
-        verbose_name = 'Категория'
-        verbose_name_plural = 'Категории'
+        verbose_name = 'Категорія'
+        verbose_name_plural = 'Категорії'
         ordering = ['name']
 
     def __str__(self):
@@ -24,39 +23,39 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    name = models.CharField('Название', max_length=200)
+    name = models.CharField('Назва товару', max_length=200)
     slug = models.SlugField('URL', unique=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Категория', related_name='products')
-    description = models.TextField('Краткое описание')
-    full_description = models.TextField('Полное описание', blank=True)
-    price = models.DecimalField('Цена', max_digits=10, decimal_places=2)
-    discount_price = models.DecimalField('Цена со скидкой', max_digits=10, decimal_places=2, blank=True, null=True)
-    stock = models.PositiveIntegerField('Количество на складе', default=0)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Категорія', related_name='products')
+    description = models.TextField('Короткий опис', blank=True)
+    full_description = models.TextField('Повний опис', blank=True)
+    price = models.DecimalField('Ціна', max_digits=10, decimal_places=2)
+    discount_price = models.DecimalField('Ціна зі знижкою', max_digits=10, decimal_places=2, blank=True, null=True)
+    stock = models.PositiveIntegerField('Кількість на складі', default=0)
     
     # Product options stored as JSON
-    colors = models.JSONField('Доступные цвета', default=list, blank=True)
-    sizes = models.JSONField('Доступные размеры', default=list, blank=True)
+    colors = models.JSONField('Доступні кольори', default=list, blank=True, null=True)
+    sizes = models.JSONField('Доступні розміри', default=list, blank=True, null=True)
     
     # Product features and specifications
-    features = models.JSONField('Особенности', default=list, blank=True)
-    specifications = models.JSONField('Характеристики', default=dict, blank=True)
-    care_instructions = models.TextField('Инструкции по уходу', blank=True)
+    features = models.JSONField('Особливості', default=list, blank=True, null=True)
+    specifications = models.JSONField('Характеристики', default=dict, blank=True, null=True)
+    care_instructions = models.TextField('Інструкції по догляду', blank=True, null=True)
     
     # Status flags
-    is_active = models.BooleanField('Активен', default=True)
-    is_featured = models.BooleanField('Рекомендуемый', default=False)
+    is_active = models.BooleanField('Активний', default=True)
+    is_featured = models.BooleanField('Рекомендований', default=False)
     is_new = models.BooleanField('Новинка', default=False)
     
     # SEO fields
     meta_title = models.CharField('Meta Title', max_length=200, blank=True)
     meta_description = models.TextField('Meta Description', blank=True)
     
-    created_at = models.DateTimeField('Создано', auto_now_add=True)
-    updated_at = models.DateTimeField('Обновлено', auto_now=True)
+    created_at = models.DateTimeField('Створено', auto_now_add=True)
+    updated_at = models.DateTimeField('Оновлено', auto_now=True)
 
     class Meta:
         verbose_name = 'Товар'
-        verbose_name_plural = 'Товары'
+        verbose_name_plural = 'Товари'
         ordering = ['-created_at']
 
     def __str__(self):
@@ -86,18 +85,18 @@ class Product(models.Model):
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images', verbose_name='Товар')
-    image = models.ImageField('Изображение', upload_to='products/')
+    image = models.ImageField('Зображення', upload_to='products/')
     alt_text = models.CharField('Alt текст', max_length=200, blank=True)
-    is_main = models.BooleanField('Главное изображение', default=False)
+    is_main = models.BooleanField('Головне зображення', default=False)
     order = models.PositiveIntegerField('Порядок', default=0)
 
     class Meta:
-        verbose_name = 'Изображение товара'
-        verbose_name_plural = 'Изображения товаров'
+        verbose_name = 'Зображення товару'
+        verbose_name_plural = 'Зображення товарів'
         ordering = ['order', 'id']
 
     def __str__(self):
-        return f'{self.product.name} - Изображение {self.id}'
+        return f'{self.product.name} - Зображення {self.id}'
 
     def save(self, *args, **kwargs):
         if self.is_main:

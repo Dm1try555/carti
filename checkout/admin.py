@@ -17,10 +17,10 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderItemInline]
     
     fieldsets = (
-        ('Информация о заказе', {
+        ('Інформація о замовленні', {
             'fields': ('order_number', 'status', 'created_at', 'updated_at')
         }),
-        ('Информация о клиенте', {
+        ('Інформація про клієнта', {
             'fields': ('first_name', 'last_name', 'phone', 'email')
         }),
         ('Доставка', {
@@ -29,10 +29,10 @@ class OrderAdmin(admin.ModelAdmin):
         ('Оплата', {
             'fields': ('payment_method', 'is_paid')
         }),
-        ('Суммы', {
+        ('Суми', {
             'fields': ('subtotal', 'delivery_cost', 'discount', 'total')
         }),
-        ('Дополнительно', {
+        ('Додатково', {
             'fields': ('notes',)
         }),
     )

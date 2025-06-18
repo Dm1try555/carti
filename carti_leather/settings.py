@@ -63,6 +63,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'store.context_processors.cart_context',
                 'cart.context_processors.cart_context',
+                'store.context_processors.categories_processor',
             ],
         },
     },
@@ -150,3 +151,8 @@ MESSAGE_TAGS = {
     messages.ERROR: 'error',
 }
 # AUTH_USER_MODEL = 'users.CustomUser'
+
+
+# Telegram
+TELEGRAM_TOKEN = '7919397747:AAEjK5F-JGDnCSYVXJmZt8rP6-mQ_QU8Bkg'
+TELEGRAM_CHAT_ID = 549353219 

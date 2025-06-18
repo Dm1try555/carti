@@ -11,6 +11,6 @@ class ContactMessageAdmin(admin.ModelAdmin):
     
     def mark_as_read(self, request, queryset):
         queryset.update(is_read=True)
-    mark_as_read.short_description = 'Отметить как прочитанное'
+    mark_as_read.short_description = 'Відмітити як прочитані'
     
     actions = ['mark_as_read']

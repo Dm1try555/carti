@@ -4,66 +4,66 @@ from store.models import Product
 
 class Order(models.Model):
     STATUS_CHOICES = [
-        ('pending', 'Ожидает обработки'),
-        ('confirmed', 'Подтвержден'),
-        ('processing', 'В обработке'),
-        ('shipped', 'Отправлен'),
-        ('delivered', 'Доставлен'),
-        ('cancelled', 'Отменен'),
+        ('pending', 'Очікує обробки'),
+        ('confirmed', 'Підтверджено'),
+        ('processing', 'В обробці'),
+        ('shipped', 'Відправлено'),
+        ('delivered', 'Доставлено'),
+        ('cancelled', 'Скасовано'),
     ]
 
     PAYMENT_CHOICES = [
-        ('cash', 'Наличными при получении'),
-        ('card', 'Картой при получении'),
-        ('online', 'Онлайн оплата'),
+        ('cash', 'Готівкою при отриманні'),
+        ('card', 'Карткою при отриманні'),
+        ('online', 'Онлайн-оплата'),
     ]
 
     DELIVERY_CHOICES = [
-        ('courier', 'Курьерская доставка'),
-        ('pickup', 'Самовывоз'),
+        ('courier', 'Кур’єрська доставка'),
+        ('pickup', 'Самовивіз'),
     ]
 
-    # Order info
-    order_number = models.CharField('Номер заказа', max_length=20, unique=True)
+    # Інформація про замовлення
+    order_number = models.CharField('Номер замовлення', max_length=20, unique=True)
     status = models.CharField('Статус', max_length=20, choices=STATUS_CHOICES, default='pending')
     
-    # Customer info
-    first_name = models.CharField('Имя', max_length=100)
-    last_name = models.CharField('Фамилия', max_length=100)
+    # Інформація про клієнта
+    first_name = models.CharField('Ім’я', max_length=100)
+    last_name = models.CharField('Прізвище', max_length=100)
     phone = models.CharField('Телефон', max_length=20)
     email = models.EmailField('Email', blank=True)
     
-    # Delivery info
-    delivery_method = models.CharField('Способ доставки', max_length=20, choices=DELIVERY_CHOICES)
-    city = models.CharField('Город', max_length=100)
-    address = models.TextField('Адрес доставки', blank=True)
-    postal_code = models.CharField('Индекс', max_length=10, blank=True)
-    delivery_time = models.CharField('Время доставки', max_length=20, blank=True)
+    # Інформація про доставку
+    delivery_method = models.CharField('Спосіб доставки', max_length=20, choices=DELIVERY_CHOICES)
+    city = models.CharField('Місто', max_length=100)
+    address = models.TextField('Адреса доставки', blank=True)
+    postal_code = models.CharField('Поштовий індекс', max_length=10, blank=True)
+    delivery_time = models.CharField('Час доставки', max_length=20, blank=True)
     
-    # Payment info
-    payment_method = models.CharField('Способ оплаты', max_length=20, choices=PAYMENT_CHOICES)
-    is_paid = models.BooleanField('Оплачен', default=False)
+    # Інформація про оплату
+    payment_method = models.CharField('Спосіб оплати', max_length=20, choices=PAYMENT_CHOICES)
+    is_paid = models.BooleanField('Оплачено', default=False)
     
-    # Order totals
-    subtotal = models.DecimalField('Сумма товаров', max_digits=10, decimal_places=2)
-    delivery_cost = models.DecimalField('Стоимость доставки', max_digits=10, decimal_places=2, default=0)
-    discount = models.DecimalField('Скидка', max_digits=10, decimal_places=2, default=0)
-    total = models.DecimalField('Итого', max_digits=10, decimal_places=2)
+    # Підсумки замовлення
+    subtotal = models.DecimalField('Сума товарів', max_digits=10, decimal_places=2)
+    delivery_cost = models.DecimalField('Вартість доставки', max_digits=10, decimal_places=2, default=0)
+    discount = models.DecimalField('Знижка', max_digits=10, decimal_places=2, default=0)
+    total = models.DecimalField('Разом', max_digits=10, decimal_places=2)
     
-    # Additional info
-    notes = models.TextField('Комментарий к заказу', blank=True)
+    # Додаткова інформація
+    notes = models.TextField('Коментар до замовлення', blank=True)
     
-    # Timestamps
-    created_at = models.DateTimeField('Создано', auto_now_add=True)
-    updated_at = models.DateTimeField('Обновлено', auto_now=True)
+    # Дата і час
+    created_at = models.DateTimeField('Створено', auto_now_add=True)
+    updated_at = models.DateTimeField('Оновлено', auto_now=True)
 
     class Meta:
-        verbose_name = 'Заказ'
-        verbose_name_plural = 'Заказы'
+        verbose_name = 'Замовлення'
+        verbose_name_plural = 'Замовлення'
         ordering = ['-created_at']
 
     def __str__(self):
-        return f'Заказ #{self.order_number}'
+        return f'Замовлення #{self.order_number}'
 
     def save(self, *args, **kwargs):
         if not self.order_number:
@@ -81,17 +81,17 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items', verbose_name='Заказ')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items', verbose_name='Замовлення')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Товар')
-    product_name = models.CharField('Название товара', max_length=200)
-    product_price = models.DecimalField('Цена товара', max_digits=10, decimal_places=2)
-    quantity = models.PositiveIntegerField('Количество')
-    selected_options = models.JSONField('Выбранные опции', default=dict, blank=True)
-    total_price = models.DecimalField('Общая стоимость', max_digits=10, decimal_places=2)
+    product_name = models.CharField('Назва товару', max_length=200)
+    product_price = models.DecimalField('Ціна товару', max_digits=10, decimal_places=2)
+    quantity = models.PositiveIntegerField('Кількість')
+    selected_options = models.JSONField('Обрані опції', default=dict, blank=True)
+    total_price = models.DecimalField('Загальна вартість', max_digits=10, decimal_places=2)
 
     class Meta:
-        verbose_name = 'Элемент заказа'
-        verbose_name_plural = 'Элементы заказа'
+        verbose_name = 'Позиція замовлення'
+        verbose_name_plural = 'Позиції замовлення'
 
     def __str__(self):
         return f'{self.product_name} x {self.quantity}'

@@ -11,7 +11,7 @@ class CategoryAdmin(admin.ModelAdmin):
     
     def products_count(self, obj):
         return obj.products.count()
-    products_count.short_description = 'Количество товаров'
+    products_count.short_description = 'Кількість товарів'
 
 
 class ProductImageInline(admin.TabularInline):
@@ -29,13 +29,13 @@ class ProductAdmin(admin.ModelAdmin):
     inlines = [ProductImageInline]
     
     fieldsets = (
-        ('Основная информация', {
+        ('Загальна інформація', {
             'fields': ('name', 'slug', 'category', 'description', 'full_description')
         }),
-        ('Цены и склад', {
+        ('Ціна та кількість', {
             'fields': ('price', 'discount_price', 'stock')
         }),
-        ('Опции товара', {
+        ('Опції товару', {
             'fields': ('colors', 'sizes', 'features', 'specifications', 'care_instructions'),
             'classes': ('collapse',)
         }),

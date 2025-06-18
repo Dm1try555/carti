@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Контакти - Carti_Leather{% endblock %}
+
+{% block content %}
+    <section class="contact-page">
+        <div class="container">
+            <h1>Контакти</h1>
+            
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h3>Адреса</h3>
+                            <p>Країна виробник: Україна</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h3>Телефон</h3>
+                            <p><a href="tel:+380964290768">+38 (096) 42-90-768</a><br>
+                            <small>Щодня з 10:00 до 18:00</small></p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h3>Email</h3>
+                            <p>
+                                <a href="mailto:cartiualeather@gmail.com">cartiualeather@gmail.com</a><br>
+                                <small>Відповідаємо протягом 24 годин</small>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h3>Графік роботи</h3>
+                            <p>Пн-Пт: 10:00 - 18:00<br>
+                            Сб-Нд: 10:00 - 16:00</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-form-section">
+                    <h2>Напишіть нам</h2>
+                    <form method="POST" action="{% url 'contact:send_message' %}" class="contact-form">
+                        {% csrf_token %}
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="name">Ім'я *</label>
+                                <input type="text" id="name" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email *</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Телефон *</label>
+                            <input type="tel" id="phone" name="phone" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject">Тема повідомлення *</label>
+                            <select id="subject" name="subject" required>
+                                <option value="">Оберіть тему</option>
+                                <option value="order">Питання щодо замовлення</option>
+                                <option value="product">Питання про товар</option>
+                                <option value="custom">Індивідуальне замовлення</option>
+                                <option value="complaint">Скарга</option>
+                                <option value="other">Інше</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="messenger">Месенджери для зв'язку *</label>
+                            <select id="messenger" name="messenger" required>
+                                <option value="">Оберіть месенджер</option>
+                                <option value="empty">Немає</option>
+                                <option value="telegram">Telegram</option>
+                                <option value="viber">Viber</option>
+                                <option value="whatsapp">WhatsApp</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Повідомлення *</label>
+                            <textarea id="message" name="message" rows="5" required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">Відправити повідомлення</button>
+                    </form>
+                </div>
+            </div>
+        
+            <!-- FAQ -->
+            <div class="faq-section">
+                <h2>Часті питання</h2>
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <h3>Чи можна замовити виріб за індивідуальними розмірами?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Так, ми приймаємо індивідуальні замовлення. Вартість і терміни виготовлення обговорюються окремо залежно від складності виробу.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <h3>Які гарантії ви надаєте?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Ми надаємо гарантію 1 рік на всі вироби від виробничих дефектів. Гарантія не поширюється на природний знос і пошкодження через неправильне використання.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <h3>Скільки часу займає виготовлення замовлення?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Стандартні вироби з каталогу зазвичай є в наявності. Індивідуальні замовлення виготовляються від 7 до 21 дня залежно від складності.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <h3>Чи можна повернути або обміняти товар?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Повернення та обмін можливі протягом 14 днів з моменту покупки за умови збереження товарного вигляду. Індивідуальні замовлення не підлягають поверненню.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function toggleFaq(element) {
+    const faqItem = element.parentElement;
+    const answer = faqItem.querySelector('.faq-answer');
+    const icon = element.querySelector('i');
+    
+    faqItem.classList.toggle('active');
+    
+    if (faqItem.classList.contains('active')) {
+        answer.style.maxHeight = answer.scrollHeight + 'px';
+        icon.style.transform = 'rotate(180deg)';
+    } else {
+        answer.style.maxHeight = '0';
+        icon.style.transform = 'rotate(0deg)';
+    }
+}
+</script>
+{% endblock %}

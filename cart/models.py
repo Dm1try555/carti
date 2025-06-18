@@ -4,17 +4,17 @@ from store.models import Product
 
 
 class Cart(models.Model):
-    session_key = models.CharField('Ключ сессии', max_length=40)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь', blank=True, null=True)
-    created_at = models.DateTimeField('Создано', auto_now_add=True)
-    updated_at = models.DateTimeField('Обновлено', auto_now=True)
+    session_key = models.CharField('Ключ сесії', max_length=40)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Користувач', blank=True, null=True)
+    created_at = models.DateTimeField('Створено', auto_now_add=True)
+    updated_at = models.DateTimeField('Оновлено', auto_now=True)
 
     class Meta:
-        verbose_name = 'Корзина'
-        verbose_name_plural = 'Корзины'
+        verbose_name = 'Кошик'
+        verbose_name_plural = 'Кошики'
 
     def __str__(self):
-        return f'Корзина {self.id}'
+        return f'Кошик {self.id}'
 
     @property
     def total_items(self):
@@ -26,15 +26,15 @@ class Cart(models.Model):
 
 
 class CartItem(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items', verbose_name='Корзина')
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items', verbose_name='Кошик')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Товар')
-    quantity = models.PositiveIntegerField('Количество', default=1)
-    selected_options = models.JSONField('Выбранные опции', default=dict, blank=True)
-    created_at = models.DateTimeField('Создано', auto_now_add=True)
+    quantity = models.PositiveIntegerField('Кількість', default=1)
+    selected_options = models.JSONField('Вибрані опції', default=dict, blank=True)
+    created_at = models.DateTimeField('Створено', auto_now_add=True)
 
     class Meta:
-        verbose_name = 'Элемент корзины'
-        verbose_name_plural = 'Элементы корзины'
+        verbose_name = 'Елемент кошика'
+        verbose_name_plural = 'Елементи кошика'
         unique_together = ['cart', 'product']
 
     def __str__(self):
