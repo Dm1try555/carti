@@ -36,9 +36,14 @@ function debounce(func, wait) {
   }
 }
 
+// Валюта
 function formatPrice(price) {
-  return new Intl.NumberFormat("ru-RU").format(price) + " ₽"
+  return new Intl.NumberFormat("uk-UA", {
+    style: "currency",
+    currency: "UAH"
+  }).format(price);
 }
+
 
 // Search functionality
 function toggleSearch() {

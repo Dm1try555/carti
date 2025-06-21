@@ -11,7 +11,7 @@ document.querySelectorAll('input[name="delivery_method"]').forEach(radio => {
             // Оновити підрахунок суми
         } else {
             deliveryAddress.style.display = 'block';
-            deliveryCost.textContent = '300 ₽';
+            deliveryCost.textContent = '300 грн';
             // Оновити підрахунок суми
         }
     });

@@ -7,7 +7,7 @@
 {% block content %}
     <section class="product-detail">
         <div class="container">
-            <!-- Хлібні крихти -->
+            <!-- Підкатегорії -->
             <nav class="breadcrumbs">
                 <a href="{% url 'store:index' %}">Головна</a>
                 <span>/</span>
@@ -25,15 +25,21 @@
                 <div class="product-images">
                     <div class="main-image">
                         <img src="{% get_main_image product %}"
-                            alt="{{ product.name }}" id="mainProductImage">
+                            alt="{{ product.name }}" 
+                            id="mainProductImage" 
+                            onclick="openImageModal()">
                     </div>
-                    {% if product.images|length > 1 %}
+                    <h4 class="image-hint">Натисніть на головне фото, щоб збільшити його 👆</h4>
+
+                    {% if product.images.all|length > 1 %}
                         <div class="thumbnail-images">
-                            {% for image in product.images %}
-                                <img src="{{ image.url }}" alt="{{ product.name }}"
-                                    class="thumbnail {% if loop.first %}active{% endif %}"
-                                    onclick="changeMainImage('{{ image.url }}', this)">
+                            {% for image in product.images.all %}
+                                <img src="{{ image.image.url }}"
+                                    alt="{{ image.alt_text|default:product.name }}"
+                                    class="thumbnail {% if forloop.first %}active{% endif %}"
+                                    onclick="changeMainImage('{{ image.image.url }}', this)">
                             {% endfor %}
+
                         </div>
                     {% endif %}
                 </div>
@@ -112,10 +118,6 @@
                                     Немає в наявності
                                 </button>
                             {% endif %}
-                            <button type="button" class="wishlist-btn" onclick="toggleWishlist({{ product.id }})">
-                                <i class="far fa-heart"></i>
-                                У вибране
-                            </button>
                         </div>
                     </form>
 
@@ -130,67 +132,46 @@
                             </ul>
                         </div>
                     {% endif %}
-
-                    <!-- Характеристики товару -->
-                    {% if product.specifications %}
-                        <div class="product-specifications">
-                            <h3>Характеристики:</h3>
-                            <table>
-                                {% for spec_name, spec_value in product.specifications.items %}
-                                    <tr>
-                                        <td>{{ spec_name }}:</td>
-                                        <td>{{ spec_value }}</td>
-                                    </tr>
-                                {% endfor %}
-                            </table>
-                        </div>
-                    {% endif %}
                 </div>
             </div>
 
             <!-- Вкладки товару -->
+
             <div class="product-tabs">
                 <div class="tab-buttons">
-                    <button class="tab-btn active" onclick="showTab('description', event)">Опис</button>
-                    <button class="tab-btn" onclick="showTab('specifications')">Характеристики</button>
-                    <button class="tab-btn" onclick="showTab('care')">Догляд</button>
-                    <button class="tab-btn" onclick="showTab('delivery')">Доставка</button>
+                    <button class="tab-btn active" onclick="showTab('description', event)">Повний опис</button>
+                    <button class="tab-btn" onclick="showTab('care')">Догляд за шкіряним виробом</button>
+                    <button class="tab-btn" onclick="showTab('delivery')">Доставка та умови</button>
                 </div>
 
                 <div class="tab-content">
                     <div id="description" class="tab-pane active">
                         {{ product.full_description|default:product.description|safe }}
                     </div>
-                    <div id="specifications" class="tab-pane">
-                        {% if product.specifications %}
-                            <table class="specifications-table">
-                                {% for spec_name, spec_value in product.specifications.items %}
-                                    <tr>
-                                        <td>{{ spec_name }}</td>
-                                        <td>{{ spec_value }}</td>
-                                    </tr>
-                                {% endfor %}
-                            </table>
+
+                    <div id="care" class="tab-pane">
+                        {% if product.care_instructions %}
+                            {{ product.care_instructions|safe }}
                         {% else %}
-                            <p>Характеристики не вказані</p>
+                            {{ default_care|safe }}
                         {% endif %}
                     </div>
-                    <div id="care" class="tab-pane">
-                        {{ product.care_instructions|default:"<h4>Загальні рекомендації по догляду за шкіряними виробами:</h4>
-<ul>
-    <li>Уникайте потрапляння вологи</li>
-    <li>Зберігайте в сухому місці</li>
-    <li>Використовуйте спеціальні засоби для догляду за шкірою</li>
-    <li>Уникайте прямих сонячних променів</li>
-</ul>"|safe }}
-                    </div>
+
                     <div id="delivery" class="tab-pane">
-                        <h4>Умови доставки:</h4>
+                        <h4>Умови замовлення та доставки:</h4>
                         <ul>
-                            <li>Доставка по Москві – 300 ₽</li>
-                            <li>Доставка по Росії – від 500 ₽</li>
-                            <li>Безкоштовна доставка при замовленні від 10 000 ₽</li>
-                            <li>Термін доставки: 1-3 робочі дні</li>
+                            <li>Безкоштовна доставка при замовленні від 10 000 грн</li>
+                            <li>Доставка здійснюється Новою Поштою</li>
+                            <li>Ціна доставки залежить від тарифів перевізника</li>
+                            <li>Оплата замовлення здійснюється: онлайн на карту або накладеним платежом</li>
+                        </ul>
+                            
+                        <h4>Термін виконання замовлення від 3 до 10 діб в залежності від:</h4>
+                        <ul>
+                            <li>Рівня складності виготовлення виробу</li>
+                            <li>Рівня завантаженності майстрів</li>
+                            <li>Наявності необхідної шкіри та фурнітури</li>
+                            <li>Індивідуальних особливостей замовлення (зміна розмірів виробу, додавання або прибирання деталей деяких деталей на виробі, гравірування)</li>
                         </ul>
                     </div>
                 </div>
@@ -223,6 +204,16 @@
             {% endif %}
         </div>
     </section>
+<!-- Модальне вікно для повноекранного зображення -->
+<div id="imageModal" class="image-modal" onclick="closeImageModal()">
+    <span class="close-btn" onclick="closeImageModal()">×</span>
+    <img class="modal-content" id="modalImage">
+    <button class="prev-btn" onclick="event.stopPropagation(); changeModalImage(-1)">❮</button>
+    <button class="next-btn" onclick="event.stopPropagation(); changeModalImage(1)">❯</button>
+</div>
+<style>
+
+</style>
 {% endblock %}
 
 {% block extra_js %}

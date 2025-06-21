@@ -8,9 +8,9 @@ register = template.Library()
 def currency(value):
     """Форматирование цены"""
     try:
-        return f"{int(value):,} ₽".replace(',', ' ')
+        return f"{int(value):,} грн".replace(',', ' ')
     except (ValueError, TypeError):
-        return "0 ₽"
+        return "0 грн"
 
 
 @register.filter
@@ -44,5 +44,5 @@ def product_card(product):
 
 @register.inclusion_tag('includes/breadcrumbs.html')
 def breadcrumbs(items):
-    """Хлебные крошки"""
+    """Підзаголовки"""
     return {'items': items}

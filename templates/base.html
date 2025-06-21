@@ -148,7 +148,7 @@
         </div>
         <div class="cart-footer">
             <div class="cart-total">
-                <span>Всього: <strong id="cartTotal">{% if cart_total %}{{ cart_total|currency }}{% else %}0 ₽{% endif %}</strong></span>
+                <span>Всього: <strong id="cartTotal">{% if cart_total %}{{ cart_total|currency }}{% else %}0 грн{% endif %}</strong></span>
             </div>
             <a href="{% url 'checkout:checkout' %}" class="checkout-btn">
                 Оформити замовлення

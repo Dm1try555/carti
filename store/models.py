@@ -36,9 +36,8 @@ class Product(models.Model):
     colors = models.JSONField('Доступні кольори', default=list, blank=True, null=True)
     sizes = models.JSONField('Доступні розміри', default=list, blank=True, null=True)
     
-    # Product features and specifications
+    # Product features
     features = models.JSONField('Особливості', default=list, blank=True, null=True)
-    specifications = models.JSONField('Характеристики', default=dict, blank=True, null=True)
     care_instructions = models.TextField('Інструкції по догляду', blank=True, null=True)
     
     # Status flags
@@ -81,6 +80,8 @@ class Product(models.Model):
     def get_main_image(self):
         image = self.images.first()
         return image.image if image else None
+    
+
 
 
 class ProductImage(models.Model):

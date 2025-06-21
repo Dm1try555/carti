@@ -4,6 +4,69 @@ function changeMainImage(src, thumbnail) {
     thumbnail.classList.add('active');
 }
 
+
+let galleryImages = [];
+let currentImageIndex = 0;
+
+// При клике на миниатюру — просто меняем главное изображение
+function changeMainImage(src, thumbnail) {
+    document.getElementById('mainProductImage').src = src;
+    document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+    thumbnail.classList.add('active');
+
+    // Обновим текущий индекс
+    currentImageIndex = galleryImages.indexOf(src);
+}
+
+// При клике по главному изображению — откроется модальное
+function openImageModal() {
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+    const currentSrc = document.getElementById('mainProductImage').src;
+
+    currentImageIndex = galleryImages.indexOf(currentSrc);
+    modal.style.display = 'flex';
+    modalImg.src = currentSrc;
+}
+
+function closeImageModal() {
+    document.getElementById('imageModal').style.display = 'none';
+}
+
+// Перелистывание изображений
+function changeModalImage(direction) {
+    if (galleryImages.length === 0) return;
+
+    currentImageIndex += direction;
+    if (currentImageIndex < 0) currentImageIndex = galleryImages.length - 1;
+    if (currentImageIndex >= galleryImages.length) currentImageIndex = 0;
+
+    document.getElementById('modalImage').src = galleryImages[currentImageIndex];
+    document.getElementById('mainProductImage').src = galleryImages[currentImageIndex];
+
+    // Подсветим активную миниатюру
+    document.querySelectorAll('.thumbnail').forEach(thumb => {
+        thumb.classList.toggle('active', thumb.src === galleryImages[currentImageIndex]);
+    });
+}
+
+// Собираем все изображения после загрузки
+document.addEventListener('DOMContentLoaded', () => {
+    galleryImages = Array.from(document.querySelectorAll('.thumbnail')).map(img => img.src);
+    const mainImage = document.getElementById('mainProductImage').src;
+    if (!galleryImages.includes(mainImage)) {
+        galleryImages.unshift(mainImage);
+    }
+    currentImageIndex = galleryImages.indexOf(mainImage);
+});
+
+
+
+
+function closeImageModal() {
+    document.getElementById('imageModal').style.display = 'none';
+}
+
 function changeQuantity(delta) {
     const input = document.getElementById('quantityInput');
     let quantity = parseInt(input.value) + delta;
@@ -15,7 +78,7 @@ function changeQuantity(delta) {
     input.value = quantity;
 }
 
-function showTab(tabName, event) {
+function showTab(tabName, event = null) {
     document.querySelectorAll('.tab-pane').forEach(pane => {
         pane.classList.remove('active');
     });
@@ -23,14 +86,17 @@ function showTab(tabName, event) {
         btn.classList.remove('active');
     });
     document.getElementById(tabName).classList.add('active');
-    event.target.classList.add('active');
+    if (event) {
+        event.target.classList.add('active');
+    } else {
+        // Якщо немає event (наприклад, при ініціалізації)
+        const defaultButton = document.querySelector(`[onclick*="${tabName}"]`);
+        if (defaultButton) defaultButton.classList.add('active');
+    }
 }
 
 
-function toggleWishlist(productId) {
-    // Функція додавання у вибране
-    console.log('Перемикання вибраного для товару:', productId);
-}
+
 
 // Обробка відправлення форми
 document.getElementById('addToCartForm').addEventListener('submit', function(e) {

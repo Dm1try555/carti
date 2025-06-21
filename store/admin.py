@@ -1,5 +1,7 @@
 from django.contrib import admin
 from .models import Category, Product, ProductImage
+from .forms import ProductAdminForm
+
 
 
 @admin.register(Category)
@@ -13,15 +15,14 @@ class CategoryAdmin(admin.ModelAdmin):
         return obj.products.count()
     products_count.short_description = 'Кількість товарів'
 
-
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
     extra = 1
     fields = ['image', 'alt_text', 'is_main', 'order']
 
-
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
+    form = ProductAdminForm
     list_display = ['name', 'category', 'price', 'discount_price', 'stock', 'is_active', 'is_featured', 'created_at']
     list_filter = ['category', 'is_active', 'is_featured', 'is_new', 'created_at']
     search_fields = ['name', 'description']
@@ -36,7 +37,7 @@ class ProductAdmin(admin.ModelAdmin):
             'fields': ('price', 'discount_price', 'stock')
         }),
         ('Опції товару', {
-            'fields': ('colors', 'sizes', 'features', 'specifications', 'care_instructions'),
+            'fields': ('colors', 'sizes', 'features', 'care_instructions'),
             'classes': ('collapse',)
         }),
         ('Статус', {
