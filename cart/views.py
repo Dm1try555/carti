@@ -18,12 +18,7 @@ def cart_view(request):
     if subtotal >= 10000:
         delivery_cost = 0
 
-    # Застосування промокоду
-    promo_code = request.session.get('promo_code')
     discount = 0
-    if promo_code:
-        # Логіка промокоду буде в окремому додатку
-        pass
 
     total = subtotal + delivery_cost - discount
 
@@ -32,8 +27,7 @@ def cart_view(request):
         'subtotal': subtotal,
         'delivery_cost': delivery_cost,
         'discount': discount,
-        'total': total,
-        'current_promo_code': promo_code,
+        'total': total
     }
     return render(request, 'cart/cart.html', context)
 

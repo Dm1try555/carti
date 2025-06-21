@@ -3,6 +3,34 @@ from django.views.decorators.http import require_POST
 from django.contrib import messages
 from cart.utils import get_or_create_cart
 from .models import Order, OrderItem
+from django.conf import settings
+
+import asyncio
+from aiogram import Bot
+
+# Ініціалізація Telegram бота
+bot = Bot(token=settings.TELEGRAM_TOKEN)
+
+def send_telegram_message_sync(text):
+    try:
+        loop = asyncio.get_running_loop()
+    except RuntimeError:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+
+    if loop.is_running():
+        asyncio.create_task(bot.send_message(
+            chat_id=settings.TELEGRAM_CHAT_ID,
+            text=text,
+            parse_mode="Markdown"
+        ))
+    else:
+        loop.run_until_complete(bot.send_message(
+            chat_id=settings.TELEGRAM_CHAT_ID,
+            text=text,
+            parse_mode="Markdown"
+        ))
+
 
 
 def checkout(request):
@@ -17,10 +45,7 @@ def checkout(request):
     subtotal = cart.total_price
     delivery_cost = 300 if subtotal < 10000 else 0
     
-    # Применение промокода
-    promo_code = request.session.get('promo_code')
     discount = 0
-    # Логика промокода будет в отдельном приложении
     
     total = subtotal + delivery_cost - discount
     
@@ -46,14 +71,12 @@ def process_order(request):
     
     # Создание заказа
     subtotal = cart.total_price
-    delivery_cost = 300 if request.POST.get('delivery_method') == 'courier' else 0
+    delivery_cost = 300 if request.POST.get('delivery_method') == 'nova_poshta' else 0
     if subtotal >= 10000:
         delivery_cost = 0
     
     # Применение промокода
     discount = 0
-    promo_code = request.session.get('promo_code')
-    # Логика промокода будет в отдельном приложении
     
     total = subtotal + delivery_cost - discount
     
@@ -64,9 +87,8 @@ def process_order(request):
         email=request.POST.get('email', ''),
         delivery_method=request.POST.get('delivery_method'),
         city=request.POST.get('city', ''),
-        address=request.POST.get('address', ''),
-        postal_code=request.POST.get('postal_code', ''),
-        delivery_time=request.POST.get('delivery_time', ''),
+        office=request.POST.get('office', ''),
+        messengers=request.POST.get('messengers', ''),
         payment_method=request.POST.get('payment_method'),
         subtotal=subtotal,
         delivery_cost=delivery_cost,
@@ -74,27 +96,44 @@ def process_order(request):
         total=total,
         notes=request.POST.get('notes', ''),
     )
+
+    # # Створення елементів замовлення і оновлення складу
+    # for cart_item in cart_items:
+    #     OrderItem.objects.create(
+    #         order=order,
+    #         product=cart_item.product,
+    #         product_name=cart_item.product.name,
+    #         product_price=cart_item.product.final_price,
+    #         quantity=cart_item.quantity,
+    #         selected_options=cart_item.selected_options,
+    #         total_price=cart_item.total_price,
+    #     )
+    #     cart_item.product.stock -= cart_item.quantity
+    #     cart_item.product.save()
     
-    # Создание элементов заказа
-    for cart_item in cart_items:
-        OrderItem.objects.create(
-            order=order,
-            product=cart_item.product,
-            product_name=cart_item.product.name,
-            product_price=cart_item.product.final_price,
-            quantity=cart_item.quantity,
-            selected_options=cart_item.selected_options,
-            total_price=cart_item.total_price,
-        )
-        
-        # Уменьшение количества на складе
-        cart_item.product.stock -= cart_item.quantity
-        cart_item.product.save()
-    
-    # Очистка корзины и промокода
+
+
+    # Формуємо повідомлення для Telegram
+    text = (
+        f"*Нове замовлення* #{order.order_number}\n\n"
+        f"*👤 Ім'я:* {order.first_name} {order.last_name}\n"
+        f"*📞 Телефон:* {order.phone}\n"
+        f"*📧 Email:* {order.email}\n"
+        f"*🏙 Місто:* {order.city}\n"
+        f"*🏤 Відділення:* {order.office}\n"
+        f"*🚚 Доставка:* {order.get_delivery_method_display()}\n"
+        f"*💰 Оплата:* {order.get_payment_method_display()}\n"
+        f"*💵 Сума:* {order.total} грн\n"
+        f"*📝 Примітки:* {order.notes or '—'}"
+    )
+
+
+    # Відправляємо повідомлення асинхронно
+    send_telegram_message_sync(text)
+
+    # Очищення кошика
     cart.items.all().delete()
-    if 'promo_code' in request.session:
-        del request.session['promo_code']
-    
-    messages.success(request, f'Замовлення #{order.order_number} успішно оформлено! Ми зв\'яжемося з вами найближчим часом.')
+
+    messages.success(request, f'Замовлення #{order.order_number} успішно оформлено! Ми зв\'яжемося з вами найближчим часом.')
     return redirect('store:index')
+

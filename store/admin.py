@@ -1,6 +1,15 @@
 from django.contrib import admin
+from django.utils.text import slugify
 from .models import Category, Product, ProductImage
 from .forms import ProductAdminForm
+
+
+@admin.action(description='Дублікувати вибрані товари')
+def duplicate_products(modeladmin, request, queryset):
+    for product in queryset:
+        product.pk = None  # Сбросить pk — чтобы создать новый объект
+        product.slug = ''  # Оставить пустым, чтобы админка сгенерировала slug
+        product.save()
 
 
 
@@ -28,6 +37,7 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ['name', 'description']
     prepopulated_fields = {'slug': ('name',)}
     inlines = [ProductImageInline]
+    actions = [duplicate_products]
     
     fieldsets = (
         ('Загальна інформація', {

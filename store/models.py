@@ -77,9 +77,11 @@ class Product(models.Model):
     def is_in_stock(self):
         return self.stock > 0
 
-    def get_main_image(self):
-        image = self.images.first()
-        return image.image if image else None
+    def get_main_image_url(self):
+        main_image = self.images.filter(is_main=True).first()
+        if main_image:
+            return main_image.image.url
+        return ''
     
 
 

@@ -72,10 +72,10 @@
                                 <label>Колір:</label>
                                 <div class="option-buttons">
                                     {% for color in product.colors %}
-                                        <label class="option-btn">
-                                            <input type="radio" name="color" value="{{ color }}" {% if loop.first %}checked{% endif %}>
-                                            <span>{{ color }}</span>
-                                        </label>
+                                    <label class="option-btn">
+                                        <input type="radio" name="color" value="{{ color }}" {% if forloop.first %}checked{% endif %}>
+                                        <span>{{ color }}</span>
+                                    </label>
                                     {% endfor %}
                                 </div>
                             </div>
@@ -87,7 +87,7 @@
                                 <div class="option-buttons">
                                     {% for size in product.sizes %}
                                         <label class="option-btn">
-                                            <input type="radio" name="size" value="{{ size }}" {% if loop.first %}checked{% endif %}>
+                                            <input type="radio" name="size" value="{{ size }}" {% if forloop.first %}checked{% endif %} >
                                             <span>{{ size }}</span>
                                         </label>
                                     {% endfor %}
@@ -164,6 +164,7 @@
                             <li>Доставка здійснюється Новою Поштою</li>
                             <li>Ціна доставки залежить від тарифів перевізника</li>
                             <li>Оплата замовлення здійснюється: онлайн на карту або накладеним платежом</li>
+                            <li><span style="color: red;">Накладений платіж (за умови мінімальної передоплати в 20% від вартості замовлення)</span></li>
                         </ul>
                             
                         <h4>Термін виконання замовлення від 3 до 10 діб в залежності від:</h4>
@@ -185,16 +186,18 @@
                         {% for product in related_products %}
                             <div class="product-card" onclick="location.href='{% url 'store:product_detail' product.id %}'">
                                 <div class="product-image">
-                                    {% if product.image %}
-                                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
-                                    {% else %}
-                                        <img src="{% static 'images/product-placeholder.jpg' %}" alt="{{ product.name }}">
-                                    {% endif %}
+                                    <img src="{% get_main_image product %}" alt="{{ product.name }}">
                                 </div>
                                 <div class="product-info">
                                     <h3>{{ product.name }}</h3>
                                     <div class="product-price">
-                                        <span class="price">{{ product.price|currency }}</span>
+                                        {% if product.discount_price %}
+                                            <span class="current-price">{{ product.discount_price|currency }}</span>
+                                            <span class="old-price">{{ product.price|currency }}</span>
+                                            <span class="discount-badge">-{{ product.discount_percentage }}%</span>
+                                        {% else %}
+                                            <span class="current-price">{{ product.price|currency }}</span>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>

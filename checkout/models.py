@@ -13,14 +13,20 @@ class Order(models.Model):
     ]
 
     PAYMENT_CHOICES = [
-        ('cash', 'Готівкою при отриманні'),
-        ('card', 'Карткою при отриманні'),
-        ('online', 'Онлайн-оплата'),
+        ('cash', 'Накладений платіж (з попередньою передоплатою)'),
+        ('card', 'Онлайн-оплата на карту'),
     ]
 
     DELIVERY_CHOICES = [
-        ('courier', 'Кур’єрська доставка'),
-        ('pickup', 'Самовивіз'),
+        ('nova_poshta', 'Доставка Новою Поштою'),
+        
+    ]
+
+    MESSENGERS_CHOICES = [
+        ('empty', '---'),
+        ('telegram', 'Telegram'),
+        ('viber', 'Viber'),
+        ('whatsapp', 'WhatsApp'),
     ]
 
     # Інформація про замовлення
@@ -31,14 +37,13 @@ class Order(models.Model):
     first_name = models.CharField('Ім’я', max_length=100)
     last_name = models.CharField('Прізвище', max_length=100)
     phone = models.CharField('Телефон', max_length=20)
-    email = models.EmailField('Email', blank=True)
+    email = models.EmailField('Email', blank=True, null=True)
     
     # Інформація про доставку
-    delivery_method = models.CharField('Спосіб доставки', max_length=20, choices=DELIVERY_CHOICES)
+    delivery_method = models.CharField('Спосіб доставки', max_length=20, choices=DELIVERY_CHOICES, default='nova_poshta')
     city = models.CharField('Місто', max_length=100)
-    address = models.TextField('Адреса доставки', blank=True)
-    postal_code = models.CharField('Поштовий індекс', max_length=10, blank=True)
-    delivery_time = models.CharField('Час доставки', max_length=20, blank=True)
+    office = models.CharField('№ відділення Нової Пошти', max_length=100)
+    messengers = models.CharField('Месенджери для зв’язку', max_length=20, choices=MESSENGERS_CHOICES, default='empty')
     
     # Інформація про оплату
     payment_method = models.CharField('Спосіб оплати', max_length=20, choices=PAYMENT_CHOICES)

@@ -4,6 +4,7 @@
 
 {% block title %}Кошик - Carti_Leather{% endblock %}
 
+
 {% block content %}
     <section class="cart-page">
         <div class="container">
@@ -15,16 +16,14 @@
                         {% for item in cart_items %}
                             <div class="cart-item" data-product-id="{{ item.product.id }}">
                                 <div class="item-image">
-                                    <img src="{{ item.product.image.url|default:'/static/images/product-placeholder.jpg' }}" 
+                                    <img src="{{ item.product.get_main_image_url }}" 
                                         alt="{{ item.product.name }}">
                                 </div>
                                 
                                 <div class="item-details">
                                     <h3>
                                         <a href="{% url 'store:product_detail' item.product.id %}">{{ item.product.name }}</a>
-                                    </h3>
-                                    <p class="item-description">{{ item.product.description|truncatechars:100 }}...</p>
-                                    
+                                    </h3>                                    
                                     {% if item.selected_options %}
                                         <div class="item-options">
                                             {% for option_name, option_value in item.selected_options.items %}
@@ -38,8 +37,12 @@
                                     <label>Кількість:</label>
                                     <div class="quantity-controls">
                                         <button class="quantity-btn" onclick="updateCartQuantity({{ item.product.id }}, {{ item.quantity|add:"-1" }})">-</button>
-                                        <input type="number" value="{{ item.quantity }}" min="1" max="{{ item.product.stock }}" 
-                                            onchange="updateCartQuantity({{ item.product.id }}, this.value)">
+                                        <input type="number" 
+                                        value="{{ item.quantity }}" 
+                                        min="1" 
+                                        max="{{ item.product.stock }}" 
+                                        data-product-id="{{ item.product.id }}"
+                                        onchange="updateCartQuantity({{ item.product.id }}, this.value)">
                                         <button class="quantity-btn" onclick="updateCartQuantity({{ item.product.id }}, {{ item.quantity|add:"1" }})">+</button>
                                     </div>
                                 </div>
@@ -96,19 +99,6 @@
                                 </a>
                             </div>
                         </div>
-                        
-                        <!-- Promo Code -->
-                        <div class="promo-code">
-                            <h4>Промокод</h4>
-                            <form method="POST" action="{% url 'promo:apply_promo' %}">
-                                {% csrf_token %}
-
-                                <div class="promo-input">
-                                    <input type="text" name="promo_code" placeholder="Введіть промокод" value="{{ current_promo_code }}">
-                                    <button type="submit">Застосувати</button>
-                                </div>
-                            </form>
-                        </div>
                     </div>
                 </div>
             {% else %}
@@ -124,5 +114,9 @@
 {% endblock %}
 
 {% block extra_js %}
+<script>
+    const updateCartUrl = "{% url 'cart:update_cart' %}";
+    const removeFromCartUrl = "{% url 'cart:remove_from_cart' %}";
+</script>
 <script src="{% static 'js/cart.js' %}"></script>
 {% endblock %}

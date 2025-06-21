@@ -4,25 +4,11 @@ function updateSort(sortValue) {
     window.location.href = url.toString();
 }
 
-function setView(viewType) {
-    const buttons = document.querySelectorAll('.view-btn');
-    buttons.forEach(btn => btn.classList.remove('active'));
-    event.target.closest('.view-btn').classList.add('active');
-    
-    const grid = document.getElementById('productsGrid');
-    if (viewType === 'list') {
-        grid.classList.add('list-view');
-    } else {
-        grid.classList.remove('list-view');
-    }
-    
-    localStorage.setItem('catalogView', viewType);
-}
-
-// Відновлення вибору перегляду
 document.addEventListener('DOMContentLoaded', function() {
-    const savedView = localStorage.getItem('catalogView');
-    if (savedView === 'list') {
-        setView('list');
-    }
+    const toggleBtn = document.getElementById('filtersToggleBtn');
+    const filtersSection = document.querySelector('.filters-section');
+
+    toggleBtn.addEventListener('click', function () {
+        filtersSection.classList.toggle('active');
+    });
 });

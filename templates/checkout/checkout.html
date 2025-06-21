@@ -49,19 +49,11 @@
                                 <h2>Доставка</h2>
                                 <div class="delivery-options">
                                     <label class="delivery-option">
-                                        <input type="radio" name="delivery_method" value="courier" checked>
+                                        <input type="radio" name="delivery_method" value="nova_poshta" checked>
                                         <div class="option-content">
-                                            <h3>Кур'єрська доставка</h3>
-                                            <p>Доставка за вказаною адресою</p>
-                                            <span class="price">300 грн</span>
-                                        </div>
-                                    </label>
-                                    <label class="delivery-option">
-                                        <input type="radio" name="delivery_method" value="pickup">
-                                        <div class="option-content">
-                                            <h3>Самовивіз</h3>
-                                            <p>Забрати у нашому магазині</p>
-                                            <span class="price">Безкоштовно</span>
+                                            <h3>Доставка Новою Поштою</h3>
+                                            <p>Доставка за вказаною адресою та № відділення</p>
+                                            <span class="price">За тарифом перевізника</span>
                                         </div>
                                     </label>
                                 </div>
@@ -69,24 +61,20 @@
                                 <div class="delivery-address" id="deliveryAddress">
                                     <div class="form-group">
                                         <label for="city">Місто *</label>
-                                        <input type="text" id="city" name="city" value="Москва" required>
+                                        <input type="text" id="city" name="city" value="" placeholder="Введіть місто для доставки" required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="address">Адреса доставки *</label>
-                                        <textarea id="address" name="address" required placeholder="Вулиця, будинок, квартира"></textarea>
+                                        <label for="office">№ відділення Нової Пошти *</label>
+                                        <input id="office" name="office" required placeholder="Введіть номер відділення Нової Пошти">
                                     </div>
                                     <div class="form-row">
                                         <div class="form-group">
-                                            <label for="postal_code">Індекс</label>
-                                            <input type="text" id="postal_code" name="postal_code">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="delivery_time">Час доставки</label>
-                                            <select id="delivery_time" name="delivery_time">
-                                                <option value="">Будь-який час</option>
-                                                <option value="morning">Вранці (9:00-12:00)</option>
-                                                <option value="afternoon">Вдень (12:00-18:00)</option>
-                                                <option value="evening">Ввечері (18:00-21:00)</option>
+                                            <label for="messenger">Месенджер для зв'язку</label>
+                                            <select id="messenger" name="messenger">
+                                                <option value="empty">Немає</option>
+                                                <option value="telegram">Telegram</option>
+                                                <option value="viber">Viber</option>
+                                                <option value="whatsapp">WhatsApp</option>
                                             </select>
                                         </div>
                                     </div>
@@ -101,21 +89,14 @@
                                         <input type="radio" name="payment_method" value="cash" checked>
                                         <div class="option-content">
                                             <i class="fas fa-money-bill"></i>
-                                            <span>Готівкою при отриманні</span>
+                                            <span>Накладений платіж (з попередньою передоплатою)</span>
                                         </div>
                                     </label>
                                     <label class="payment-option">
                                         <input type="radio" name="payment_method" value="card">
                                         <div class="option-content">
                                             <i class="fas fa-credit-card"></i>
-                                            <span>Карткою при отриманні</span>
-                                        </div>
-                                    </label>
-                                    <label class="payment-option">
-                                        <input type="radio" name="payment_method" value="online">
-                                        <div class="option-content">
-                                            <i class="fas fa-globe"></i>
-                                            <span>Онлайн оплата</span>
+                                            <span>Онлайн-оплата на карту</span>
                                         </div>
                                     </label>
                                 </div>
@@ -139,8 +120,8 @@
                                 <div class="order-items">
                                     {% for item in cart_items %}
                                         <div class="order-item">
-                                            <img src="{{ item.product.image.url|default:'/static/images/product-placeholder.jpg' }}" 
-                                                 alt="{{ item.product.name }}">
+                                            <img src="{{ item.product.get_main_image_url }}" 
+                                                alt="{{ item.product.name }}">
                                             <div class="item-info">
                                                 <h4>{{ item.product.name }}</h4>
                                                 <span class="quantity">{{ item.quantity }} шт.</span>

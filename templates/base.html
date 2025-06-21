@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% csrf_token %}
+    <meta name="csrf-token" content="{{ csrf_token }}">
     <title>{% block title %}Carti_Leather{% endblock %}</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
@@ -163,5 +165,6 @@
     <script src="{% static 'js/dropdawn.js' %}"></script>
     
     {% block extra_js %}{% endblock %}
+    
 </body>
 </html>

@@ -66,89 +66,6 @@ function searchProducts() {
   window.location.href = `/catalog?search=${encodeURIComponent(query)}`
 }
 
-// Cart functionality
-function addToCart(productId, quantity = 1) {
-  // Send AJAX request to add item to cart
-  fetch("/add-to-cart", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRFToken": getCSRFToken(),
-    },
-    body: JSON.stringify({
-      product_id: productId,
-      quantity: quantity,
-    }),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.success) {
-        showMessage("Товар добавлен в корзину", "success")
-        updateCartCount(data.cart_count)
-      } else {
-        showMessage(data.message || "Ошибка при добавлении товара", "error")
-      }
-    })
-    .catch((error) => {
-      showMessage("Произошла ошибка", "error")
-    })
-}
-
-function updateCartQuantity(productId, newQuantity) {
-  if (newQuantity < 1) {
-    removeFromCart(productId)
-    return
-  }
-
-  fetch("/update-cart", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRFToken": getCSRFToken(),
-    },
-    body: JSON.stringify({
-      product_id: productId,
-      quantity: newQuantity,
-    }),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.success) {
-        location.reload()
-      } else {
-        showMessage(data.message || "Ошибка при обновлении корзины", "error")
-      }
-    })
-    .catch((error) => {
-      showMessage("Произошла ошибка", "error")
-    })
-}
-
-function removeFromCart(productId) {
-  if (confirm("Удалить товар из корзины?")) {
-    fetch("/remove-from-cart", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": getCSRFToken(),
-      },
-      body: JSON.stringify({
-        product_id: productId,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          location.reload()
-        } else {
-          showMessage(data.message || "Ошибка при удалении товара", "error")
-        }
-      })
-      .catch((error) => {
-        showMessage("Произошла ошибка", "error")
-      })
-  }
-}
 
 function updateCartUI() {
   // This function updates the cart count in the header
@@ -226,10 +143,7 @@ function showMessage(text, type = "info") {
   }, 5000)
 }
 
-function getCSRFToken() {
-  const token = document.querySelector("[name=csrf_token]")
-  return token ? token.value : ""
-}
+
 
 // Smooth scrolling for navigation links
 document.querySelectorAll('a[href^="#"]').forEach((anchor) => {

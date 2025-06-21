@@ -6,6 +6,11 @@
 {% block content %}
     <section class="catalog-page">
         <div class="container">
+            <!-- CSRF Token для JS -->
+            <form id="csrf-form" style="display: none;">
+                {% csrf_token %}
+            </form>
+            
             <!-- Заголовок сторінки -->
             <div class="page-header">
                 <h1>
@@ -22,6 +27,10 @@
 
             <!-- Фільтри та сортування -->
             <div class="catalog-controls">
+                <div class="filters-toggle-wrapper">
+                    <button id="filtersToggleBtn" type="button">Фільтри</button>
+                </div>
+
                 <div class="filters-section">
                     <h3>Фільтри</h3>
                     <form method="GET" action="{% url 'store:catalog' %}" id="filtersForm">
@@ -54,9 +63,8 @@
                                 <div class="color-filters">
                                     {% for color in available_colors %}
                                         <label class="color-option">
-                                            <input type="checkbox" name="color" value="{{ color }}" 
-                                                   {% if color in request.GET.color %}checked{% endif %}>
-                                            <span class="color-swatch" style="background-color: {{ color }}"></span>
+                                            <input type="checkbox" name="color" value="{{ color }}"
+                                                {% if color in selected_colors %}checked{% endif %}>
                                             {{ color }}
                                         </label>
                                     {% endfor %}
@@ -82,13 +90,6 @@
                                 <option value="name" {% if request.GET.sort == 'name' %}selected{% endif %}>За назвою</option>
                                 <option value="newest" {% if request.GET.sort == 'newest' %}selected{% endif %}>Спочатку нові</option>
                             </select>
-                            <div class="view-toggle">
-                                <button class="view-btn active" onclick="setView('grid')">
-                                    <i class="fas fa-th"></i>
-                                </button>
-                                <button class="view-btn" onclick="setView('list')">
-                                    <i class="fas fa-list"></i>
-                                </button>
                             </div>
                         </div>
                     </div>
@@ -100,8 +101,9 @@
                             <div class="product-card" onclick="location.href='{% url 'store:product_detail' product.id %}'">
                                 <div class="product-image">
                                     <img src="{% get_main_image product %}" alt="{{ product.name }}">
+
                                     {% if product.is_featured %}
-                                        <div class="product-badge">Хіт продажів</div>
+                                        <div class="product-badge featured">Хіт продажів</div>
                                     {% endif %}
                                     {% if product.is_new %}
                                         <div class="product-badge new">Новинка</div>
@@ -110,6 +112,7 @@
                                         <div class="product-badge discount">-{{ product.discount_percentage }}%</div>
                                     {% endif %}
                                 </div>
+
                                 <div class="product-info">
                                     <h3>{{ product.name }}</h3>
                                     <p>{{ product.description|truncatechars:100 }}...</p>
@@ -127,11 +130,15 @@
                                 </div>
                             </div>
                         {% empty %}
-                            <div class="no-products">
-                                <i class="fas fa-search"></i>
-                                <h3>Товарів не знайдено</h3>
-                                <p>Спробуйте змінити параметри пошуку або фільтри</p>
-                                <a href="{% url 'store:catalog' %}" class="cta-btn">Скинути фільтри</a>
+                            <div class="no-products-wrapper">
+
+                                <div class="no-products">
+                                    <i class="fas fa-search"></i>
+                                    <h3>Товарів не знайдено</h3>
+                                    <p>Спробуйте змінити параметри пошуку або фільтри</p>
+                                    <a href="{% url 'store:catalog' %}" class="cta-btn">Скинути фільтри</a>
+                                </div>
+
                             </div>
                         {% endfor %}
                     </div>
@@ -167,6 +174,9 @@
 {% endblock %}
 
 {% block extra_js %}
+<script>
+    const addToCartUrl = "{% url 'cart:add_to_cart' %}";
+</script>
 <script src="{% static 'js/catalog.js' %}"></script>
-
+<script src="{% static 'js/cart.js' %}"></script>
 {% endblock %}
